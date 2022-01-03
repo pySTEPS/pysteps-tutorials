@@ -1,0 +1,22 @@
+# This workflow will test the code base using the LATEST version of black
+
+name: Lint notebooks (black and nbstripout)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Linting
+        working-directory: ${{github.workspace}}
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files

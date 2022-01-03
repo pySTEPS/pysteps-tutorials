@@ -1,0 +1,29 @@
+name: doc_builder
+channels:
+- conda-forge
+- defaults
+dependencies:
+  - python=3.8
+  - jupyter
+  - nbconvert
+  - matplotlib
+  - numpy
+  - pip
+  - jsmin
+  - jsonschema
+  - netCDF4
+  - numpy
+  - opencv
+  - pillow
+  - pyproj
+  - scipy
+  - pywavelets
+  - cython
+  - dask
+  - pyfftw
+  - h5py
+  - PyWavelets
+  - pygrib
+  - cartopy>=0.18
+  - scikit-image
+  - pandas

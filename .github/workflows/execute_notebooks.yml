@@ -1,0 +1,162 @@
+# Execute the jupyter notebooks, push them to dedicate branches,
+# and trigger ReadTheDocs in the linked repository.
+
+# This workflow was largely inspired by the following wradlib-notebooks CI task:
+# https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/main.yml
+name: Execute jupyter notebooks
+
+env:
+  # URL for the external repository linked with the notebooks in this project.
+  LINKED_REPO: pySTEPS/pysteps
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  run_notebooks:
+    name: Execute jupyter notebooks
+    runs-on: "ubuntu-latest"
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    outputs:
+      rtd_branch: ${{steps.get_nb_render_branch.outputs.render_branch}}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install mamba and create environment
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: environment.yml
+          environment-name: doc_builder
+          extra-specs: python=3.8
+
+      - name: Checkout linked repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.LINKED_REPO }}
+          path: ${{ env.LINKED_REPO }}
+
+      - name: Install package from the linked repository
+        working-directory: ${{ env.LINKED_REPO }}
+        run: |
+          pip install .
+          # Since actions/checkout@v2 only checkouts a single commit without tags let's fetch the tags
+          git fetch --all --tags
+          git log HEAD
+
+      - name: Determine destination branch for the rendered notebooks and the RTD branch
+        id: get_nb_render_branch
+        working-directory: ${{ env.LINKED_REPO }}
+        run: |
+          ########################################
+          # Find the branch that trigger the event
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            event_branch=$(echo ${GITHUB_REF##*/})
+          elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            event_branch=$(echo $GITHUB_BASE_REF)
+          else
+            event_branch=unknown
+          fi
+          echo "::set-output name=event_branch::${event_branch}"
+
+          ####################################################################
+          # Check if the Linked repository current commit corresponds to a tag
+          LINKED_REPO_TAG=$(git name-rev --name-only --tags HEAD)
+          echo "::set-output name=linked_repo_tag::${LINKED_REPO_TAG}"
+
+          ###################################
+          # Determine destination branch name
+          if [[ "${LINKED_REPO_TAG}" == "undefined" ]]; then
+            # Not a tagged version
+            if [[ "${event_branch}" == "dev" ]]; then
+              echo "::set-output name=render_branch::test"
+            else
+              echo "::set-output name=render_branch::latest"
+            fi
+          else
+            # Save tagged versions in their own branch
+            echo "::set-output name=render_branch::${LINKED_REPO_TAG}"
+          fi
+
+      - name: Execute notebooks
+        working-directory: ./notebooks
+        run: |
+          jupyter nbconvert --to notebook --inplace --execute ./*.ipynb
+          jupyter nbconvert --to notebook --inplace --execute ./*/*.ipynb
+
+      - name: Print debug information
+        env:
+          RENDER_BRANCH: ${{steps.get_nb_render_branch.outputs.render_branch}}
+          EVENT_BRANCH: ${{steps.get_nb_render_branch.outputs.event_branch}}
+          LINKED_REPO_TAG: ${{steps.get_nb_render_branch.outputs.linked_repo_tag}}
+        run: |
+          echo "EVENT_BRANCH=${EVENT_BRANCH}"
+          echo "LINKED_REPO_TAG=${LINKED_REPO_TAG}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
+          echo "RENDER_BRANCH=${RENDER_BRANCH}"
+
+      - name: Commit notebooks
+        env:
+          RENDER_BRANCH: ${{steps.get_nb_render_branch.outputs.render_branch}}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Checkout changes in an orphan branch first.
+          # We want to update  only the notebooks.
+          git checkout --orphan tmp
+          git reset
+          git add -A notebooks
+          git commit -m "Rendering $GITHUB_SHA"
+
+          # Clean rest of the files.
+          git clean -d -f -f
+
+          # Switch to destination branch
+          action=$(git ls-remote --exit-code --heads origin ${RENDER_BRANCH} > /dev/null || echo "push")
+          if [ "$action" != "push" ] ; then
+            git fetch origin ${RENDER_BRANCH}
+            # If it exits, merge the changes and push.
+            git merge --strategy=ours --allow-unrelated-histories origin/${RENDER_BRANCH} -m "Commit"
+
+            # Add changes to the RENDER_BRANCH.
+            git checkout -b ${RENDER_BRANCH} origin/${RENDER_BRANCH}
+            git merge --squash tmp
+            git commit --allow-empty -m "Rendering $GITHUB_SHA"
+          fi
+          #Otherwise, the next task will push the orpahn branch.
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{steps.get_nb_render_branch.outputs.render_branch}}
+
+  trigger_rtd:
+      # Task adapted from the wradlib project
+      # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/render_notebooks.yml
+      needs: [run_notebooks]
+      name: Trigger readthedocs
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          shell: bash -l {0}
+      env:
+        RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+        RTD_URL: ${{ secrets.RTD_URL }}
+        RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
+      steps:
+      - name: Trigger readthedocs for the corresponding branch (latest or tag)
+        run: |
+          # Ignore triggering if this workflow was triggered by the dev branch.
+          if [[ "${RTD_BRANCH}" != "test" ]]; then
+            curl -X POST -d "branches=${RTD_BRANCH}" -d "token=${RTD_TOKEN}" "${RTD_URL}"
+          fi

@@ -1,0 +1,11 @@
+.tox
+.idea
+.vscode
+build
+.ipynb_checkpoints
+MANIFEST
+*.egg-info
+
+/docs/_build
+/docs/_generated/
+/docs/notebooks/
