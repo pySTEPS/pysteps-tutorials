@@ -94,8 +94,7 @@ jobs:
       - name: Execute notebooks
         working-directory: ./notebooks
         run: |
-          jupyter nbconvert --to notebook --inplace --execute ./*.ipynb
-          jupyter nbconvert --to notebook --inplace --execute ./*/*.ipynb
+          jupyter nbconvert --to notebook --inplace --execute ./*.ipynb          
 
       - name: Print debug information
         env:
