@@ -52,6 +52,10 @@ jobs:
           git fetch --all --tags
           git log HEAD
 
+      - name: Install pysteps-data
+        run: |
+          python ci/fetch_pysteps_data.py ./notebooks/data          
+
       - name: Determine destination branch for the rendered notebooks and the RTD branch
         id: get_nb_render_branch
         working-directory: ${{ env.LINKED_REPO }}
@@ -140,23 +144,23 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{steps.get_nb_render_branch.outputs.render_branch}}
 
-  trigger_rtd:
-      # Task adapted from the wradlib project
-      # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/render_notebooks.yml
-      needs: [run_notebooks]
-      name: Trigger readthedocs
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          shell: bash -l {0}
-      env:
-        RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
-        RTD_URL: ${{ secrets.RTD_URL }}
-        RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
-      steps:
-      - name: Trigger readthedocs for the corresponding branch (latest or tag)
-        run: |
-          # Ignore triggering if this workflow was triggered by the dev branch.
-          if [[ "${RTD_BRANCH}" != "test" ]]; then
-            curl -X POST -d "branches=${RTD_BRANCH}" -d "token=${RTD_TOKEN}" "${RTD_URL}"
-          fi
+#  trigger_rtd:
+#      # Task adapted from the wradlib project
+#      # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/render_notebooks.yml
+#      needs: [run_notebooks]
+#      name: Trigger readthedocs
+#      runs-on: ubuntu-latest
+#      defaults:
+#        run:
+#          shell: bash -l {0}
+#      env:
+#        RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+#        RTD_URL: ${{ secrets.RTD_URL }}
+#        RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
+#      steps:
+#      - name: Trigger readthedocs for the corresponding branch (latest or tag)
+#        run: |
+#          # Ignore triggering if this workflow was triggered by the dev branch.
+#          if [[ "${RTD_BRANCH}" != "test" ]]; then
+#            curl -X POST -d "branches=${RTD_BRANCH}" -d "token=${RTD_TOKEN}" "${RTD_URL}"
+#          fi
