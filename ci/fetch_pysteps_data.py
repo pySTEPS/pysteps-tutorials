@@ -15,7 +15,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     download_pysteps_data(args.dest_dir, force=True)
-
-    create_default_pystepsrc(
-        args.dest_dir, config_dir=args.dest_dir, file_name="pystepsrc"
-    )
+    create_default_pystepsrc(args.dest_dir)

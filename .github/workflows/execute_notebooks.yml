@@ -54,7 +54,8 @@ jobs:
 
       - name: Install pysteps-data
         run: |
-          python ci/fetch_pysteps_data.py ./notebooks/data          
+          python ci/fetch_pysteps_data.py ./notebooks/data
+          python -c "import pysteps; print(pysteps.config_fname())"          
 
       - name: Determine destination branch for the rendered notebooks and the RTD branch
         id: get_nb_render_branch
