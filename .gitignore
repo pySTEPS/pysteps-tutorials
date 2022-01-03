@@ -6,6 +6,5 @@ build
 MANIFEST
 *.egg-info
 
-/docs/_build
-/docs/_generated/
-/docs/notebooks/
+./notebooks/data
+pysteps_data
