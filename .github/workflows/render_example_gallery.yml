@@ -1,7 +1,6 @@
 # Execute the examples, in the form of pythons scripts, and generate the example
-
-notebooks, push them to dedicate branches,
-# and trigger ReadTheDocs in the linked repository.
+# gallery using sphinx-gallery.
+# Finally, trigger ReadTheDocs in the linked repository.
 
 # This workflow was largely inspired by the following wradlib-notebooks CI task:
 # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/main.yml
