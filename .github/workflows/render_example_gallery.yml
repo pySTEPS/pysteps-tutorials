@@ -16,8 +16,8 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  run_notebooks:
-    name: Execute jupyter notebooks
+  render_examples_gallery:
+    name: Execute examples and generate the examples gallery
     runs-on: "ubuntu-latest"
 
     defaults:
@@ -57,7 +57,7 @@ jobs:
           python ci/fetch_pysteps_data.py $HOME/pysteps_data
           python -c "import pysteps; print(pysteps.config_fname())"          
 
-      - name: Determine destination branch for the rendered notebooks and the RTD branch
+      - name: Determine destination branch for the rendered example gallery and the RTD branch
         id: get_nb_render_branch
         working-directory: ${{ env.LINKED_REPO }}
         run: |
@@ -91,10 +91,10 @@ jobs:
             echo "::set-output name=render_branch::${LINKED_REPO_TAG}"
           fi
 
-      - name: Execute notebooks
-        working-directory: ./notebooks
+      - name: Build examples gallery
+        working-directory: ./docs
         run: |
-          jupyter nbconvert --to notebook --inplace --execute ./*.ipynb          
+          make html          
 
       - name: Print debug information
         env:
@@ -107,7 +107,7 @@ jobs:
           echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "RENDER_BRANCH=${RENDER_BRANCH}"
 
-      - name: Commit notebooks
+      - name: Commit the generated examples gallery
         env:
           RENDER_BRANCH: ${{steps.get_nb_render_branch.outputs.render_branch}}
         run: |
@@ -115,11 +115,11 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
           # Checkout changes in an orphan branch first.
-          # We want to update  only the notebooks.
+          # We want to update only the examples_gallery directory
           git checkout --orphan tmp
           git reset
-          git add -A notebooks
-          git commit -m "Rendering $GITHUB_SHA"
+          git add -A examples_gallery
+          git commit -m "Generating gallery for $GITHUB_SHA"
 
           # Clean rest of the files.
           git clean -d -f -f
@@ -136,7 +136,7 @@ jobs:
             git merge --squash tmp
             git commit --allow-empty -m "Rendering $GITHUB_SHA"
           fi
-          #Otherwise, the next task will push the orpahn branch.
+          # Otherwise, the next task will push the orpahn branch.
 
       - name: Push changes
         uses: ad-m/github-push-action@master
