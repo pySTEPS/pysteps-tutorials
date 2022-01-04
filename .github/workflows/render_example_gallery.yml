@@ -1,9 +1,11 @@
-# Execute the jupyter notebooks, push them to dedicate branches,
+# Execute the examples, in the form of pythons scripts, and generate the example
+
+notebooks, push them to dedicate branches,
 # and trigger ReadTheDocs in the linked repository.
 
 # This workflow was largely inspired by the following wradlib-notebooks CI task:
 # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/main.yml
-name: Execute jupyter notebooks
+name: Render the example gallery
 
 env:
   # URL for the external repository linked with the notebooks in this project.
@@ -37,6 +39,10 @@ jobs:
           environment-file: environment.yml
           environment-name: doc_builder
           extra-specs: python=3.8
+
+      - name: Install additional dependencies using pip
+        run: |
+          pip install -r docs/requirements.txt
 
       - name: Checkout linked repository
         uses: actions/checkout@v2
