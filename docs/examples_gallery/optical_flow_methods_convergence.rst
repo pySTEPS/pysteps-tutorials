@@ -466,7 +466,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.6 [s]
+    LucasKanade computation time: 1.7 [s]
 
 
 
@@ -729,7 +729,7 @@ Rotational motion
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  47.888 seconds)
+   **Total running time of the script:** ( 0 minutes  47.964 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_optical_flow_methods_convergence.py:

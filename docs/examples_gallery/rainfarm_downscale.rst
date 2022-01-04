@@ -272,7 +272,7 @@ Rainfall downscaling by a filtered autoregressive model. J. Hydrometeor., 7,
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.372 seconds)
+   **Total running time of the script:** ( 0 minutes  13.341 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_rainfarm_downscale.py:

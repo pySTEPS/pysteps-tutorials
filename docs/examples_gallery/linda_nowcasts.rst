@@ -228,15 +228,15 @@ Deterministic nowcast
     ARI model order:            1
     localization window radius: 64.0
 
-    Detecting features... found 15 blobs in 0.81 seconds.
+    Detecting features... found 15 blobs in 0.79 seconds.
     Transforming to Lagrangian coordinates... 0.08 seconds.
-    Estimating the first convolution kernel... 7.69 seconds.
+    Estimating the first convolution kernel... 7.81 seconds.
     Estimating the ARI(p,1) parameters... 0.13 seconds.
-    Estimating the second convolution kernel... 6.97 seconds.
+    Estimating the second convolution kernel... 6.88 seconds.
     Computing nowcast for time step 1... 0.33 seconds.
     Computing nowcast for time step 2... 0.34 seconds.
     Computing nowcast for time step 3... 0.34 seconds.
-    Computing nowcast for time step 4... 0.34 seconds.
+    Computing nowcast for time step 4... 0.35 seconds.
     Computing nowcast for time step 5... 0.34 seconds.
     Computing nowcast for time step 6... 0.34 seconds.
     Computing S-PROG nowcast:
@@ -416,13 +416,13 @@ Probabilistic nowcast
     parallel workers:           8
     seed:                       None
 
-    Detecting features... found 15 blobs in 0.80 seconds.
+    Detecting features... found 15 blobs in 0.79 seconds.
     Transforming to Lagrangian coordinates... 0.07 seconds.
-    Estimating the first convolution kernel... 7.83 seconds.
-    Estimating the ARI(p,1) parameters... 0.12 seconds.
-    Estimating the second convolution kernel... 7.10 seconds.
+    Estimating the first convolution kernel... 7.93 seconds.
+    Estimating the ARI(p,1) parameters... 0.13 seconds.
+    Estimating the second convolution kernel... 7.28 seconds.
     Estimating forecast errors... 0.51 seconds.
-    Estimating perturbation parameters... 34.96 seconds.
+    Estimating perturbation parameters... 34.62 seconds.
     Computing STEPS nowcast:
     ------------------------
 
@@ -532,7 +532,7 @@ considerably better than STEPS.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 3 minutes  10.446 seconds)
+   **Total running time of the script:** ( 3 minutes  9.035 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_linda_nowcasts.py:

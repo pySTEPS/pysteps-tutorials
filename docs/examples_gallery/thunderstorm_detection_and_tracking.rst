@@ -368,7 +368,7 @@ The size of the thunderstorm cells in time
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  53.215 seconds)
+   **Total running time of the script:** ( 0 minutes  53.162 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_thunderstorm_detection_and_tracking.py:
