@@ -50,7 +50,7 @@ jobs:
           COMMIT_MSG: ${{ github.event.commits[0].message }}
         run: |     
           # By default, we always checkout the master branch from the external repo.
-          pysteps_repo_branch=master
+          pysteps_branch=master
           
           # If the current workflow was triggered externally an empty commit from the 
           # pysteps main repo CI, let's read the commit message and find which branch
@@ -59,10 +59,10 @@ jobs:
           is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c "\[TRIGGER\]")          
           if [[ ${is_externally_triggered} -gt 0 ]]; then
             branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2 | tr -d " ")            
-            [[ ! -z ${branch} ]] && pysteps_repo_branch=${branch}
+            [[ ! -z ${branch} ]] && pysteps_branch=${branch}
           fi
           
-          echo "::set-output name=pysteps_repo_branch::${pysteps_repo_branch}"
+          echo "::set-output name=pysteps_branch::${pysteps_branch}"
 
       - name: Install mamba and create environment
         uses: mamba-org/provision-with-micromamba@main
@@ -80,7 +80,7 @@ jobs:
         with:
           repository: ${{ env.PYSTEPS_MAIN_REPO }}
           path: ${{ env.PYSTEPS_MAIN_REPO }}
-          ref: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
+          ref: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
 
       - name: Install package from the linked repository
         working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
@@ -102,32 +102,26 @@ jobs:
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
         run: |
-          # Check if the Linked repository current commit corresponds to a tag
-          PYSTEPS_REPO_TAG=$(git name-rev --name-only --tags HEAD)
-          echo "::set-output name=PYSTEPS_REPO_TAG::${PYSTEPS_REPO_TAG}"
+          render_branch="${event_branch}_rendered"
           
-          # Determine destination branch name
-          if [[ "${PYSTEPS_REPO_TAG}" == "undefined" ]]; then
-            # Not a tagged version,           
-            if [[ "${event_branch}" == "main" ]]; then
-              echo "::set-output name=render_branch::latest"
-            else            
-              echo "::set-output name=render_branch::${event_branch}_rendered"
-            fi
-          else
-            # Save the tagged versions in their own branch
-            echo "::set-output name=render_branch::${PYSTEPS_REPO_TAG}"
+          # Check if the Linked repository current commit corresponds to a tag
+          if [[ "${event_branch}" == "main" ]]; then
+            render_branch="latest"
+            
+            # Tagged version are rendered in their own branch
+            pysteps_tag=$(git name-rev --name-only --tags HEAD)            
+            [[ "${pysteps_tag}" != "undefined" ]] && render_branch=${pysteps_tag}"            
           fi
+          echo "::set-output name=render_branch::${render_branch}"
+          
 
       - name: Print debug information
         env:
           RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
-          EXTERNAL_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
-          PYSTEPS_REPO_TAG: ${{steps.set_destination_branch.outputs.PYSTEPS_REPO_TAG}}
+          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
         run: |
-          echo "EVENT_BRANCH=${EVENT_BRANCH}"
-          echo "PYSTEPS_REPO_TAG=${PYSTEPS_REPO_TAG}"
+          echo "EVENT_BRANCH=${EVENT_BRANCH}"          
           echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "RENDER_BRANCH=${RENDER_BRANCH}"
 
