@@ -12,7 +12,7 @@ env:
 
 on:
   push:
-    branches: [ main, dev, scripts]
+    branches: [ main, dev, scripts ]
   pull_request:
     branches: [ main, dev ]
 
@@ -26,7 +26,7 @@ jobs:
         shell: bash -l {0}
 
     outputs:
-      rtd_branch: ${{steps.get_nb_render_branch.outputs.render_branch}}
+      rtd_branch: ${{steps.set_destination_branch.outputs.render_branch}}
 
     steps:
       - name: Checkout repository
@@ -43,31 +43,9 @@ jobs:
         run: |
           pip install -r docs/requirements.txt
 
-      - name: Checkout linked repository
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ env.LINKED_REPO }}
-          path: ${{ env.LINKED_REPO }}
-
-      - name: Install package from the linked repository
-        working-directory: ${{ env.LINKED_REPO }}
+      - name: Get the name of the local branch that trigger the event
+        id: get_local_triggering_branch
         run: |
-          pip install .
-          # Since actions/checkout@v2 only checkouts a single commit without tags let's fetch the tags
-          git fetch --all --tags
-          git log HEAD
-
-      - name: Install pysteps-data
-        run: |
-          python ci/fetch_pysteps_data.py $HOME/pysteps_data
-          python -c "import pysteps; print(pysteps.config_fname())"          
-
-      - name: Determine destination branch for the rendered example gallery and the RTD branch
-        id: get_nb_render_branch
-        working-directory: ${{ env.LINKED_REPO }}
-        run: |
-          ########################################
-          # Find the branch that trigger the event
           if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
             event_branch=$(echo ${GITHUB_REF##*/})
           elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
@@ -77,44 +55,84 @@ jobs:
           fi
           echo "::set-output name=event_branch::${event_branch}"
 
-          ####################################################################
+      - name: Find the external branch that triggered the event
+        id: get_external_triggering_branch
+        env:
+          COMMIT_MSG: ${{ github.event.commits[0].message }}
+        run: |
+          external_banch=$(echo $COMMIT_MSG | grep -i branch | cut -d ":" -f 2)
+          external_banch=${external_banch//[[:blank:]]/} # trim white spaces
+          
+          if [[ -z ${external_banch} ]]; then 
+            external_banch=dev
+          fi
+          
+          echo "::set-output name=external_banch::${external_banch}"
+
+      - name: Determine destination branch for the rendered example gallery and the RTD branch
+        id: set_destination_branch
+        working-directory: ${{ env.LINKED_REPO }}
+        env:
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+        run: |
           # Check if the Linked repository current commit corresponds to a tag
           LINKED_REPO_TAG=$(git name-rev --name-only --tags HEAD)
           echo "::set-output name=linked_repo_tag::${LINKED_REPO_TAG}"
 
-          ###################################
           # Determine destination branch name
           if [[ "${LINKED_REPO_TAG}" == "undefined" ]]; then
-            # Not a tagged version
-            if [[ "${event_branch}" == "dev" ]]; then
-              echo "::set-output name=render_branch::test"
-            else
+            # Not a tagged version,           
+            if [[ "${event_branch}" == "main" ]]; then
               echo "::set-output name=render_branch::latest"
+            else            
+              echo "::set-output name=render_branch::${event_branch}_rendered"
             fi
           else
-            # Save tagged versions in their own branch
+            # Save the tagged versions in their own branch
             echo "::set-output name=render_branch::${LINKED_REPO_TAG}"
           fi
 
-      - name: Build examples gallery
-        working-directory: ./docs
-        run: |
-          make html          
-
       - name: Print debug information
         env:
-          RENDER_BRANCH: ${{steps.get_nb_render_branch.outputs.render_branch}}
-          EVENT_BRANCH: ${{steps.get_nb_render_branch.outputs.event_branch}}
-          LINKED_REPO_TAG: ${{steps.get_nb_render_branch.outputs.linked_repo_tag}}
+          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          EXTERNAL_BRANCH: ${{steps.get_external_triggering_branch.outputs.external_banch}}
+          LINKED_REPO_TAG: ${{steps.set_destination_branch.outputs.linked_repo_tag}}
         run: |
           echo "EVENT_BRANCH=${EVENT_BRANCH}"
           echo "LINKED_REPO_TAG=${LINKED_REPO_TAG}"
           echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "RENDER_BRANCH=${RENDER_BRANCH}"
 
+      - name: Checkout linked repository at the external branch that triggered the event
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.LINKED_REPO }}
+          path: ${{ env.LINKED_REPO }}
+          ref: ${{steps.get_external_triggering_branch.outputs.external_banch}}
+
+      - name: Install package from the linked repository
+        working-directory: ${{ env.LINKED_REPO }}
+        run: |
+          pip install .
+          # actions/checkout@v2 only checkouts a single commit without tags
+          # let's fetch the tags
+          git fetch --all --tags
+          git log HEAD
+
+      - name: Install pysteps-data
+        run: |
+          python ci/fetch_pysteps_data.py $HOME/pysteps_data
+          python -c "import pysteps; print(pysteps.config_fname())"    
+
+      - name: Build examples gallery
+        working-directory: ./docs
+        run: |
+          make html      
+
       - name: Commit the generated examples gallery
         env:
-          RENDER_BRANCH: ${{steps.get_nb_render_branch.outputs.render_branch}}
+          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -145,26 +163,26 @@ jobs:
           fi
           # Otherwise, the next task will push the orpahn branch.
 
-      - name: Push changes
+      - name: Push changes to the rendered branch
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{steps.get_nb_render_branch.outputs.render_branch}}
+          branch: ${{steps.set_destination_branch.outputs.render_branch}}
 
 #  trigger_rtd:
-#      # Task adapted from the wradlib project
-#      # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/render_notebooks.yml
-#      needs: [run_notebooks]
-#      name: Trigger readthedocs
-#      runs-on: ubuntu-latest
-#      defaults:
-#        run:
-#          shell: bash -l {0}
-#      env:
-#        RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
-#        RTD_URL: ${{ secrets.RTD_URL }}
-#        RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
-#      steps:
+#    # Task adapted from the wradlib project
+#    # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/render_notebooks.yml
+#    needs: [ run_notebooks ]
+#    name: Trigger readthedocs
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        shell: bash -l {0}
+#    env:
+#      RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+#      RTD_URL: ${{ secrets.RTD_URL }}
+#      RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
+#    steps:
 #      - name: Trigger readthedocs for the corresponding branch (latest or tag)
 #        run: |
 #          # Ignore triggering if this workflow was triggered by the dev branch.
