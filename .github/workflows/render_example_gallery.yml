@@ -8,7 +8,7 @@ name: Render the example gallery
 
 env:
   # URL for the external repository linked with the notebooks in this project.
-  LINKED_REPO: pySTEPS/pysteps
+  PYSTEPS_MAIN_REPO: pySTEPS/pysteps
 
 on:
   push:
@@ -59,28 +59,51 @@ jobs:
         id: get_external_triggering_branch
         env:
           COMMIT_MSG: ${{ github.event.commits[0].message }}
-        run: |
-          external_banch=$(echo $COMMIT_MSG | grep -i branch | cut -d ":" -f 2)
-          external_banch=${external_banch//[[:blank:]]/} # trim white spaces
+        run: |          
+          # By default, we always checkout the master branch from the external repo.
+          pysteps_repo_branch=master
           
-          if [[ -z ${external_banch} ]]; then 
-            external_banch=dev
+          # If the current workflow was triggered externally an empty commit from the 
+          # pysteps main repo CI, let's read the commit message and find which branch
+          # orginated the action. We will checkout that branch to build the examples
+          # gallery.
+            
+          is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c \[TRIGGER\])          
+          if [[ ${is_externally_triggered} -gt 0 ]];
+            pysteps_repo_branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2)
+            pysteps_repo_branch=${pysteps_repo_branch//[[:blank:]]/} # trim white spaces          
+          
+            if [[ -z ${pysteps_repo_branch} ]]; then 
+              pysteps_repo_branch=master 
+            fi
           fi
           
-          echo "::set-output name=external_banch::${external_banch}"
+          echo "::set-output name=pysteps_repo_branch::${pysteps_repo_branch}"
+
+      - name: Print debug information
+        env:
+          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          EXTERNAL_BRANCH: ${{steps.get_external_triggering_branch.outputs.pysteps_repo_branch}}
+          PYSTEPS_REPO_TAG: ${{steps.set_destination_branch.outputs.PYSTEPS_REPO_TAG}}
+        run: |
+          echo "EVENT_BRANCH=${EVENT_BRANCH}"
+          echo "PYSTEPS_REPO_TAG=${PYSTEPS_REPO_TAG}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
+          echo "RENDER_BRANCH=${RENDER_BRANCH}"
 
       - name: Determine destination branch for the rendered example gallery and the RTD branch
         id: set_destination_branch
-        working-directory: ${{ env.LINKED_REPO }}
+        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
         run: |
           # Check if the Linked repository current commit corresponds to a tag
-          LINKED_REPO_TAG=$(git name-rev --name-only --tags HEAD)
-          echo "::set-output name=linked_repo_tag::${LINKED_REPO_TAG}"
-
+          PYSTEPS_REPO_TAG=$(git name-rev --name-only --tags HEAD)
+          echo "::set-output name=PYSTEPS_REPO_TAG::${PYSTEPS_REPO_TAG}"
+          
           # Determine destination branch name
-          if [[ "${LINKED_REPO_TAG}" == "undefined" ]]; then
+          if [[ "${PYSTEPS_REPO_TAG}" == "undefined" ]]; then
             # Not a tagged version,           
             if [[ "${event_branch}" == "main" ]]; then
               echo "::set-output name=render_branch::latest"
@@ -89,30 +112,18 @@ jobs:
             fi
           else
             # Save the tagged versions in their own branch
-            echo "::set-output name=render_branch::${LINKED_REPO_TAG}"
+            echo "::set-output name=render_branch::${PYSTEPS_REPO_TAG}"
           fi
 
-      - name: Print debug information
-        env:
-          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
-          EXTERNAL_BRANCH: ${{steps.get_external_triggering_branch.outputs.external_banch}}
-          LINKED_REPO_TAG: ${{steps.set_destination_branch.outputs.linked_repo_tag}}
-        run: |
-          echo "EVENT_BRANCH=${EVENT_BRANCH}"
-          echo "LINKED_REPO_TAG=${LINKED_REPO_TAG}"
-          echo "GITHUB_SHA=${GITHUB_SHA}"
-          echo "RENDER_BRANCH=${RENDER_BRANCH}"
-
-      - name: Checkout linked repository at the external branch that triggered the event
+      - name: Checkout pysteps repository at the branch that triggered the event
         uses: actions/checkout@v2
         with:
-          repository: ${{ env.LINKED_REPO }}
-          path: ${{ env.LINKED_REPO }}
-          ref: ${{steps.get_external_triggering_branch.outputs.external_banch}}
+          repository: ${{ env.PYSTEPS_MAIN_REPO }}
+          path: ${{ env.PYSTEPS_MAIN_REPO }}
+          ref: ${{steps.get_external_triggering_branch.outputs.pysteps_repo_branch}}
 
       - name: Install package from the linked repository
-        working-directory: ${{ env.LINKED_REPO }}
+        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
         run: |
           pip install .
           # actions/checkout@v2 only checkouts a single commit without tags
