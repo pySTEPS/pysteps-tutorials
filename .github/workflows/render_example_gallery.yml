@@ -1,0 +1,197 @@
+# Execute the examples, in the form of pythons scripts, and generate the example
+# gallery using sphinx-gallery.
+# Finally, trigger ReadTheDocs in the linked repository.
+
+# This workflow was largely inspired by the following wradlib-notebooks CI task:
+# https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/main.yml
+name: Render the example gallery
+
+env:
+  # URL for the external repository linked with the notebooks in this project.
+  PYSTEPS_MAIN_REPO: pySTEPS/pysteps
+
+on:
+  push:
+    branches: [ main, dev, scripts ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  render_examples_gallery:
+    name: Execute examples and generate the examples gallery
+    runs-on: "ubuntu-latest"
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    outputs:
+      rtd_branch: ${{steps.set_destination_branch.outputs.render_branch}}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get the name of the local branch that trigger the event
+        id: get_local_triggering_branch
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            event_branch=$(echo ${GITHUB_REF##*/})
+          elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            event_branch=$(echo $GITHUB_BASE_REF)
+          else
+            event_branch=unknown
+          fi
+          echo "::set-output name=event_branch::${event_branch}"
+
+      - name: Set the pysteps branch to use
+        id: set_pysteps_branch
+        env:
+          COMMIT_MSG: ${{ github.event.commits[0].message }}
+        run: |     
+          # By default, we always checkout the master branch from the external repo.
+          pysteps_repo_branch=master
+          
+          # If the current workflow was triggered externally an empty commit from the 
+          # pysteps main repo CI, let's read the commit message and find which branch
+          # orginated the action. We will checkout that branch to build the examples
+          # gallery.            
+          is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c "\[TRIGGER\]")          
+          if [[ ${is_externally_triggered} -gt 0 ]]; then
+            branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2 | tr -d " ")            
+            [[ ! -z ${branch} ]] && pysteps_repo_branch=${branch}
+          fi
+          
+          echo "::set-output name=pysteps_repo_branch::${pysteps_repo_branch}"
+
+      - name: Install mamba and create environment
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: environment.yml
+          environment-name: doc_builder
+          extra-specs: python=3.8
+
+      - name: Install additional dependencies using pip
+        run: |
+          pip install -r docs/requirements.txt
+
+      - name: Checkout pysteps repository at the branch that triggered the event
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.PYSTEPS_MAIN_REPO }}
+          path: ${{ env.PYSTEPS_MAIN_REPO }}
+          ref: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
+
+      - name: Install package from the linked repository
+        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
+        run: |
+          pip install .
+          # actions/checkout@v2 only checkouts a single commit without tags
+          # let's fetch the tags
+          git fetch --all --tags
+          git log HEAD
+
+      - name: Install pysteps-data
+        run: |
+          python ci/fetch_pysteps_data.py $HOME/pysteps_data
+          python -c "import pysteps; print(pysteps.config_fname())"    
+
+      - name: Determine destination branch for the rendered example gallery and the RTD branch
+        id: set_destination_branch
+        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
+        env:
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+        run: |
+          # Check if the Linked repository current commit corresponds to a tag
+          PYSTEPS_REPO_TAG=$(git name-rev --name-only --tags HEAD)
+          echo "::set-output name=PYSTEPS_REPO_TAG::${PYSTEPS_REPO_TAG}"
+          
+          # Determine destination branch name
+          if [[ "${PYSTEPS_REPO_TAG}" == "undefined" ]]; then
+            # Not a tagged version,           
+            if [[ "${event_branch}" == "main" ]]; then
+              echo "::set-output name=render_branch::latest"
+            else            
+              echo "::set-output name=render_branch::${event_branch}_rendered"
+            fi
+          else
+            # Save the tagged versions in their own branch
+            echo "::set-output name=render_branch::${PYSTEPS_REPO_TAG}"
+          fi
+
+      - name: Print debug information
+        env:
+          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          EXTERNAL_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
+          PYSTEPS_REPO_TAG: ${{steps.set_destination_branch.outputs.PYSTEPS_REPO_TAG}}
+        run: |
+          echo "EVENT_BRANCH=${EVENT_BRANCH}"
+          echo "PYSTEPS_REPO_TAG=${PYSTEPS_REPO_TAG}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
+          echo "RENDER_BRANCH=${RENDER_BRANCH}"
+
+      - name: Build examples gallery
+        working-directory: ./docs
+        run: |
+          make html 
+
+      - name: Commit the generated examples gallery
+        env:
+          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Checkout changes in an orphan branch first.
+          # We want to update only the examples_gallery directory
+          git checkout --orphan tmp
+          git reset
+          git add -A docs
+          git add -A -f docs/examples_gallery
+          git add -A examples LICENSE README.md
+          git commit -m "Generating gallery for $GITHUB_SHA"
+
+          # Clean rest of the files.
+          git clean -d -f -f
+
+          # Switch to destination branch
+          action=$(git ls-remote --exit-code --heads origin ${RENDER_BRANCH} > /dev/null || echo "push")
+          if [ "$action" != "push" ] ; then
+            git fetch origin ${RENDER_BRANCH}
+            # If it exits, merge the changes and push.
+            git merge --strategy=ours --allow-unrelated-histories origin/${RENDER_BRANCH} -m "Commit"
+
+            # Add changes to the RENDER_BRANCH.
+            git checkout -b ${RENDER_BRANCH} origin/${RENDER_BRANCH}
+            git merge --squash tmp
+            git commit --allow-empty -m "Rendering $GITHUB_SHA"
+          fi
+          # Otherwise, the next task will push the orpahn branch.
+
+      - name: Push changes to the rendered branch
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{steps.set_destination_branch.outputs.render_branch}}
+
+#  trigger_rtd:
+#    # Task adapted from the wradlib project
+#    # https://github.com/wradlib/wradlib-notebooks/blob/main/.github/workflows/render_notebooks.yml
+#    needs: [ run_notebooks ]
+#    name: Trigger readthedocs
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        shell: bash -l {0}
+#    env:
+#      RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+#      RTD_URL: ${{ secrets.RTD_URL }}
+#      RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
+#    steps:
+#      - name: Trigger readthedocs for the corresponding branch (latest or tag)
+#        run: |
+#          # Ignore triggering if this workflow was triggered by the dev branch.
+#          if [[ "${RTD_BRANCH}" != "test" ]]; then
+#            curl -X POST -d "branches=${RTD_BRANCH}" -d "token=${RTD_TOKEN}" "${RTD_URL}"
+#          fi
