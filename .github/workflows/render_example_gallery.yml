@@ -32,17 +32,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install mamba and create environment
-        uses: mamba-org/provision-with-micromamba@main
-        with:
-          environment-file: environment.yml
-          environment-name: doc_builder
-          extra-specs: python=3.8
-
-      - name: Install additional dependencies using pip
-        run: |
-          pip install -r docs/requirements.txt
-
       - name: Get the name of the local branch that trigger the event
         id: get_local_triggering_branch
         run: |
@@ -55,27 +44,23 @@ jobs:
           fi
           echo "::set-output name=event_branch::${event_branch}"
 
-      - name: Find the external branch that triggered the event
-        id: get_external_triggering_branch
+      - name: Set the pysteps branch to use
+        id: set_pysteps_branch
         env:
           COMMIT_MSG: ${{ github.event.commits[0].message }}
-        run: |          
+        run: |     
+          set -x
           # By default, we always checkout the master branch from the external repo.
           pysteps_repo_branch=master
           
           # If the current workflow was triggered externally an empty commit from the 
           # pysteps main repo CI, let's read the commit message and find which branch
           # orginated the action. We will checkout that branch to build the examples
-          # gallery.
-            
-          is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c \[TRIGGER\])          
+          # gallery.            
+          is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c "\[TRIGGER\]")          
           if [[ ${is_externally_triggered} -gt 0 ]]; then
-            pysteps_repo_branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2)
-            pysteps_repo_branch=${pysteps_repo_branch//[[:blank:]]/} # trim white spaces          
-          
-            if [[ -z ${pysteps_repo_branch} ]]; then 
-              pysteps_repo_branch=master 
-            fi
+            branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2 | tr -d " ")            
+            [[ ! -z ${branch} ]] && pysteps_repo_branch=${branch}
           fi
           
           echo "::set-output name=pysteps_repo_branch::${pysteps_repo_branch}"
@@ -84,13 +69,50 @@ jobs:
         env:
           RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
-          EXTERNAL_BRANCH: ${{steps.get_external_triggering_branch.outputs.pysteps_repo_branch}}
+          EXTERNAL_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
           PYSTEPS_REPO_TAG: ${{steps.set_destination_branch.outputs.PYSTEPS_REPO_TAG}}
         run: |
           echo "EVENT_BRANCH=${EVENT_BRANCH}"
           echo "PYSTEPS_REPO_TAG=${PYSTEPS_REPO_TAG}"
           echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "RENDER_BRANCH=${RENDER_BRANCH}"
+
+      - name: Install mamba and create environment
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: environment.yml
+          environment-name: doc_builder
+          extra-specs: python=3.8
+
+      - name: Install additional dependencies using pip
+        run: |
+          pip install -r docs/requirements.txt
+
+      - name: Checkout pysteps repository at the branch that triggered the event
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.PYSTEPS_MAIN_REPO }}
+          path: ${{ env.PYSTEPS_MAIN_REPO }}
+          ref: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
+
+      - name: Install package from the linked repository
+        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
+        run: |
+          pip install .
+          # actions/checkout@v2 only checkouts a single commit without tags
+          # let's fetch the tags
+          git fetch --all --tags
+          git log HEAD
+
+      - name: Install pysteps-data
+        run: |
+          python ci/fetch_pysteps_data.py $HOME/pysteps_data
+          python -c "import pysteps; print(pysteps.config_fname())"    
+
+      - name: Build examples gallery
+        working-directory: ./docs
+        run: |
+          make html      
 
       - name: Determine destination branch for the rendered example gallery and the RTD branch
         id: set_destination_branch
@@ -114,32 +136,6 @@ jobs:
             # Save the tagged versions in their own branch
             echo "::set-output name=render_branch::${PYSTEPS_REPO_TAG}"
           fi
-
-      - name: Checkout pysteps repository at the branch that triggered the event
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ env.PYSTEPS_MAIN_REPO }}
-          path: ${{ env.PYSTEPS_MAIN_REPO }}
-          ref: ${{steps.get_external_triggering_branch.outputs.pysteps_repo_branch}}
-
-      - name: Install package from the linked repository
-        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
-        run: |
-          pip install .
-          # actions/checkout@v2 only checkouts a single commit without tags
-          # let's fetch the tags
-          git fetch --all --tags
-          git log HEAD
-
-      - name: Install pysteps-data
-        run: |
-          python ci/fetch_pysteps_data.py $HOME/pysteps_data
-          python -c "import pysteps; print(pysteps.config_fname())"    
-
-      - name: Build examples gallery
-        working-directory: ./docs
-        run: |
-          make html      
 
       - name: Commit the generated examples gallery
         env:
