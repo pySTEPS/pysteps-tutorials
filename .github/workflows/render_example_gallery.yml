@@ -56,7 +56,9 @@ jobs:
           # pysteps main repo CI, let's read the commit message and find which branch
           # orginated the action. We will checkout that branch to build the examples
           # gallery.
+          shopt -s expand_aliases
           alias print_commit_msg="git log -1 --pretty=%B"
+          
           is_externally_triggered=$(print_commit_msg | head -1 | grep -c "\[TRIGGER\]")          
           if [[ ${is_externally_triggered} -gt 0 ]]; then
             branch=$(print_commit_msg | grep "\[Branch\]:" | cut -d ":" -f 2 | tr -d " ")            
