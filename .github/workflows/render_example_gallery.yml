@@ -64,37 +64,12 @@ jobs:
           
           echo "::set-output name=pysteps_branch::${pysteps_branch}"
 
-      - name: Install mamba and create environment
-        uses: mamba-org/provision-with-micromamba@main
-        with:
-          environment-file: environment.yml
-          environment-name: doc_builder
-          extra-specs: python=3.8
-
-      - name: Install additional dependencies using pip
-        run: |
-          pip install -r docs/requirements.txt
-
       - name: Checkout pysteps repository at the branch that triggered the event
         uses: actions/checkout@v2
         with:
           repository: ${{ env.PYSTEPS_MAIN_REPO }}
           path: ${{ env.PYSTEPS_MAIN_REPO }}
           ref: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
-
-      - name: Install package from the linked repository
-        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
-        run: |
-          pip install .
-          # actions/checkout@v2 only checkouts a single commit without tags
-          # let's fetch the tags
-          git fetch --all --tags
-          git log HEAD
-
-      - name: Install pysteps-data
-        run: |
-          python ci/fetch_pysteps_data.py $HOME/pysteps_data
-          python -c "import pysteps; print(pysteps.config_fname())"    
 
       - name: Determine destination branch for the rendered example gallery and the RTD branch
         id: set_destination_branch
@@ -110,10 +85,9 @@ jobs:
             
             # Tagged version are rendered in their own branch
             pysteps_tag=$(git name-rev --name-only --tags HEAD)            
-            [[ "${pysteps_tag}" != "undefined" ]] && render_branch=${pysteps_tag}"            
+            [[ "${pysteps_tag}" != "undefined" ]] && render_branch="${pysteps_tag}"            
           fi
           echo "::set-output name=render_branch::${render_branch}"
-          
 
       - name: Print debug information
         env:
@@ -124,6 +98,31 @@ jobs:
           echo "EVENT_BRANCH=${EVENT_BRANCH}"          
           echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "RENDER_BRANCH=${RENDER_BRANCH}"
+
+      - name: Install mamba and create environment
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: environment.yml
+          environment-name: doc_builder
+          extra-specs: python=3.8
+
+      - name: Install additional dependencies using pip
+        run: |
+          pip install -r docs/requirements.txt
+
+      - name: Install package from the linked repository
+        working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
+        run: |
+          pip install .
+          # actions/checkout@v2 only checkouts a single commit without tags
+          # let's fetch the tags
+          git fetch --all --tags
+          git log HEAD
+
+      - name: Install pysteps-data
+        run: |
+          python ci/fetch_pysteps_data.py $HOME/pysteps_data
+          python -c "import pysteps; print(pysteps.config_fname())"  
 
       - name: Build examples gallery
         working-directory: ./docs
