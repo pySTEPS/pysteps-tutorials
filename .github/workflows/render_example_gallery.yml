@@ -55,14 +55,17 @@ jobs:
           # If the current workflow was triggered externally an empty commit from the 
           # pysteps main repo CI, let's read the commit message and find which branch
           # orginated the action. We will checkout that branch to build the examples
-          # gallery.            
+          # gallery.
+          COMMIT_MSG=$(git log -1 --pretty=%B))
+          
           is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c "\[TRIGGER\]")          
           if [[ ${is_externally_triggered} -gt 0 ]]; then
-            branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2 | tr -d " ")            
+            branch=$(echo $COMMIT_MSG | grep "\[Branch\]:" | cut -d ":" -f 2 | tr -d " ")            
             [[ ! -z ${branch} ]] && pysteps_branch=${branch}
           fi
           
           echo "::set-output name=pysteps_branch::${pysteps_branch}"
+          echo "pysteps_branch::${pysteps_branch}"
 
       - name: Checkout pysteps repository at the branch that triggered the event
         uses: actions/checkout@v2
