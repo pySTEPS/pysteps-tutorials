@@ -421,7 +421,7 @@ post-processing is not necessary.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  18.300 seconds)
+   **Total running time of the script:** ( 0 minutes  15.715 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_anvil_nowcast.py:

@@ -348,11 +348,11 @@ estimating the motion, here we are going to use all the available 10 fields.
     -----
     DARTS
     -----
-      Computing the FFT of the reflectivity fields...Done in 0.31 seconds.
-      Constructing the y-vector...Done in 0.33 seconds.
-      Constructing the H-matrix...Done in 1.43 seconds.
-      Solving the linear systems...Done in 0.10 seconds.
-    --- 2.2127645015716553 seconds ---
+      Computing the FFT of the reflectivity fields...Done in 0.26 seconds.
+      Constructing the y-vector...Done in 0.29 seconds.
+      Constructing the H-matrix...Done in 1.23 seconds.
+      Solving the linear systems...Done in 0.09 seconds.
+    --- 1.9114902019500732 seconds ---
 
 
 
@@ -396,7 +396,7 @@ inconsitency during the solution of the optical flow equations.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  10.861 seconds)
+   **Total running time of the script:** ( 1 minutes  0.997 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_plot_optical_flow.py:

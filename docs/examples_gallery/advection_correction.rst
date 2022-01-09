@@ -254,7 +254,7 @@ https://doi.org/10.1175/1520-0426(1999)016<0189:RTRREP>2.0.CO;2
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.571 seconds)
+   **Total running time of the script:** ( 0 minutes  10.063 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_advection_correction.py:

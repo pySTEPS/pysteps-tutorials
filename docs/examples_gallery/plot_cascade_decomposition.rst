@@ -269,7 +269,7 @@ into a set of cascade levels of decreasing spatial scale and plot them.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.850 seconds)
+   **Total running time of the script:** ( 0 minutes  1.599 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_plot_cascade_decomposition.py:

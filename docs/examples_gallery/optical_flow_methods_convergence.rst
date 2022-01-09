@@ -466,7 +466,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.9 [s]
+    LucasKanade computation time: 1.6 [s]
 
 
 
@@ -497,7 +497,7 @@ Constant motion y-direction
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.9 [s]
+    LucasKanade computation time: 1.6 [s]
 
 
 
@@ -528,7 +528,7 @@ Rotational motion
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.9 [s]
+    LucasKanade computation time: 1.6 [s]
 
 
 
@@ -562,7 +562,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    VET computation time: 4.1 [s]
+    VET computation time: 3.6 [s]
 
 
 
@@ -593,7 +593,7 @@ Constant motion y-direction
 
  .. code-block:: none
 
-    VET computation time: 3.8 [s]
+    VET computation time: 3.4 [s]
 
 
 
@@ -624,7 +624,7 @@ Rotational motion
 
  .. code-block:: none
 
-    VET computation time: 31.3 [s]
+    VET computation time: 27.9 [s]
 
 
 
@@ -658,7 +658,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    DARTS computation time: 2.3 [s]
+    DARTS computation time: 1.9 [s]
 
 
 
@@ -689,7 +689,7 @@ Constant motion y-direction
 
  .. code-block:: none
 
-    DARTS computation time: 2.3 [s]
+    DARTS computation time: 1.9 [s]
 
 
 
@@ -721,7 +721,7 @@ Rotational motion
 
  .. code-block:: none
 
-    DARTS computation time: 2.3 [s]
+    DARTS computation time: 2.0 [s]
 
 
 
@@ -729,7 +729,7 @@ Rotational motion
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  55.964 seconds)
+   **Total running time of the script:** ( 0 minutes  49.261 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_optical_flow_methods_convergence.py:

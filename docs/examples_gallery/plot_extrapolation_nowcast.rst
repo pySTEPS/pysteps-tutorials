@@ -263,7 +263,7 @@ skill score for high-resolution precipitation forecasts.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  26.530 seconds)
+   **Total running time of the script:** ( 0 minutes  23.288 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_plot_extrapolation_nowcast.py:
