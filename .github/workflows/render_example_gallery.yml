@@ -49,7 +49,6 @@ jobs:
         env:
           COMMIT_MSG: ${{ github.event.commits[0].message }}
         run: |     
-          set -x
           # By default, we always checkout the master branch from the external repo.
           pysteps_repo_branch=master
           
@@ -64,18 +63,6 @@ jobs:
           fi
           
           echo "::set-output name=pysteps_repo_branch::${pysteps_repo_branch}"
-
-      - name: Print debug information
-        env:
-          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
-          EXTERNAL_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
-          PYSTEPS_REPO_TAG: ${{steps.set_destination_branch.outputs.PYSTEPS_REPO_TAG}}
-        run: |
-          echo "EVENT_BRANCH=${EVENT_BRANCH}"
-          echo "PYSTEPS_REPO_TAG=${PYSTEPS_REPO_TAG}"
-          echo "GITHUB_SHA=${GITHUB_SHA}"
-          echo "RENDER_BRANCH=${RENDER_BRANCH}"
 
       - name: Install mamba and create environment
         uses: mamba-org/provision-with-micromamba@main
@@ -109,11 +96,6 @@ jobs:
           python ci/fetch_pysteps_data.py $HOME/pysteps_data
           python -c "import pysteps; print(pysteps.config_fname())"    
 
-      - name: Build examples gallery
-        working-directory: ./docs
-        run: |
-          make html      
-
       - name: Determine destination branch for the rendered example gallery and the RTD branch
         id: set_destination_branch
         working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
@@ -136,6 +118,23 @@ jobs:
             # Save the tagged versions in their own branch
             echo "::set-output name=render_branch::${PYSTEPS_REPO_TAG}"
           fi
+
+      - name: Print debug information
+        env:
+          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          EXTERNAL_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_repo_branch}}
+          PYSTEPS_REPO_TAG: ${{steps.set_destination_branch.outputs.PYSTEPS_REPO_TAG}}
+        run: |
+          echo "EVENT_BRANCH=${EVENT_BRANCH}"
+          echo "PYSTEPS_REPO_TAG=${PYSTEPS_REPO_TAG}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
+          echo "RENDER_BRANCH=${RENDER_BRANCH}"
+
+      - name: Build examples gallery
+        working-directory: ./docs
+        run: |
+          make html 
 
       - name: Commit the generated examples gallery
         env:
