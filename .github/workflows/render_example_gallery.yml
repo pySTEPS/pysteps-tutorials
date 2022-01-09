@@ -69,7 +69,7 @@ jobs:
           # gallery.
             
           is_externally_triggered=$(echo $COMMIT_MSG | head -1 | grep -c \[TRIGGER\])          
-          if [[ ${is_externally_triggered} -gt 0 ]];
+          if [[ ${is_externally_triggered} -gt 0 ]]; then
             pysteps_repo_branch=$(echo $COMMIT_MSG | grep Branch: | cut -d ":" -f 2)
             pysteps_repo_branch=${pysteps_repo_branch//[[:blank:]]/} # trim white spaces          
           
