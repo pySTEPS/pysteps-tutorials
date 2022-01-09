@@ -398,7 +398,7 @@ within the first hour into the nowcast.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.707 seconds)
+   **Total running time of the script:** ( 0 minutes  14.267 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_LK_buffer_mask.py:

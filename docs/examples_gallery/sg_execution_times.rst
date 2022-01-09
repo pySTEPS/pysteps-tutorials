@@ -5,36 +5,36 @@
 
 Computation times
 =================
-**08:39.461** total execution time for **examples_gallery** files:
+**09:42.490** total execution time for **examples_gallery** files:
 
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_linda_nowcasts.py` (``linda_nowcasts.py``)                                           | 03:21.655 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_linda_nowcasts.py` (``linda_nowcasts.py``)                                           | 04:05.920 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_plot_optical_flow.py` (``plot_optical_flow.py``)                                     | 01:24.038 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_plot_optical_flow.py` (``plot_optical_flow.py``)                                     | 01:28.593 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_thunderstorm_detection_and_tracking.py` (``thunderstorm_detection_and_tracking.py``) | 00:55.917 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_thunderstorm_detection_and_tracking.py` (``thunderstorm_detection_and_tracking.py``) | 00:57.684 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_optical_flow_methods_convergence.py` (``optical_flow_methods_convergence.py``)       | 00:47.460 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_optical_flow_methods_convergence.py` (``optical_flow_methods_convergence.py``)       | 00:54.555 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_plot_extrapolation_nowcast.py` (``plot_extrapolation_nowcast.py``)                   | 00:24.743 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_plot_extrapolation_nowcast.py` (``plot_extrapolation_nowcast.py``)                   | 00:27.312 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_plot_steps_nowcast.py` (``plot_steps_nowcast.py``)                                   | 00:19.715 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_plot_steps_nowcast.py` (``plot_steps_nowcast.py``)                                   | 00:21.888 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_plot_ensemble_verification.py` (``plot_ensemble_verification.py``)                   | 00:18.095 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_plot_ensemble_verification.py` (``plot_ensemble_verification.py``)                   | 00:20.373 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_anvil_nowcast.py` (``anvil_nowcast.py``)                                             | 00:14.863 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_anvil_nowcast.py` (``anvil_nowcast.py``)                                             | 00:15.179 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_rainfarm_downscale.py` (``rainfarm_downscale.py``)                                   | 00:14.043 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_LK_buffer_mask.py` (``LK_buffer_mask.py``)                                           | 00:14.267 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_LK_buffer_mask.py` (``LK_buffer_mask.py``)                                           | 00:13.707 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_rainfarm_downscale.py` (``rainfarm_downscale.py``)                                   | 00:12.794 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_advection_correction.py` (``advection_correction.py``)                               | 00:11.367 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_advection_correction.py` (``advection_correction.py``)                               | 00:09.532 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_data_transformations.py` (``data_transformations.py``)                               | 00:07.085 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_data_transformations.py` (``data_transformations.py``)                               | 00:06.925 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_probability_forecast.py` (``probability_forecast.py``)                               | 00:03.623 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_probability_forecast.py` (``probability_forecast.py``)                               | 00:03.999 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_plot_cascade_decomposition.py` (``plot_cascade_decomposition.py``)                   | 00:01.697 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_plot_cascade_decomposition.py` (``plot_cascade_decomposition.py``)                   | 00:01.845 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_gallery_plot_noise_generators.py` (``plot_noise_generators.py``)                             | 00:01.454 | 0.0 MB |
+| :ref:`sphx_glr_examples_gallery_plot_noise_generators.py` (``plot_noise_generators.py``)                             | 00:01.623 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------------------------+-----------+--------+

@@ -466,7 +466,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.5 [s]
+    LucasKanade computation time: 1.8 [s]
 
 
 
@@ -497,7 +497,7 @@ Constant motion y-direction
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.5 [s]
+    LucasKanade computation time: 1.8 [s]
 
 
 
@@ -528,7 +528,7 @@ Rotational motion
 
  .. code-block:: none
 
-    LucasKanade computation time: 1.5 [s]
+    LucasKanade computation time: 1.9 [s]
 
 
 
@@ -562,7 +562,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    VET computation time: 3.4 [s]
+    VET computation time: 3.8 [s]
 
 
 
@@ -593,7 +593,7 @@ Constant motion y-direction
 
  .. code-block:: none
 
-    VET computation time: 3.2 [s]
+    VET computation time: 3.6 [s]
 
 
 
@@ -613,7 +613,7 @@ Rotational motion
 
 
 .. image-sg:: /examples_gallery/images/sphx_glr_optical_flow_methods_convergence_007.png
-   :alt: VET Relative RMSE: 3.70%, Reference motion, mm/h, Retrieved motion, mm/h
+   :alt: VET Relative RMSE: 3.73%, Reference motion, mm/h, Retrieved motion, mm/h
    :srcset: /examples_gallery/images/sphx_glr_optical_flow_methods_convergence_007.png
    :class: sphx-glr-single-img
 
@@ -624,7 +624,7 @@ Rotational motion
 
  .. code-block:: none
 
-    VET computation time: 27.1 [s]
+    VET computation time: 30.0 [s]
 
 
 
@@ -658,7 +658,7 @@ Constant motion x-direction
 
  .. code-block:: none
 
-    DARTS computation time: 1.8 [s]
+    DARTS computation time: 2.4 [s]
 
 
 
@@ -689,7 +689,7 @@ Constant motion y-direction
 
  .. code-block:: none
 
-    DARTS computation time: 1.8 [s]
+    DARTS computation time: 2.4 [s]
 
 
 
@@ -721,7 +721,7 @@ Rotational motion
 
  .. code-block:: none
 
-    DARTS computation time: 1.9 [s]
+    DARTS computation time: 2.4 [s]
 
 
 
@@ -729,7 +729,7 @@ Rotational motion
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  47.460 seconds)
+   **Total running time of the script:** ( 0 minutes  54.555 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_optical_flow_methods_convergence.py:

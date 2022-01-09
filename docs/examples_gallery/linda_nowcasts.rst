@@ -132,7 +132,7 @@ Estimate the advection field
     --- 5 outliers detected ---
     --- LK found 176 sparse vectors ---
     --- 63 samples left after declustering ---
-    --- total time: 0.38 seconds ---
+    --- total time: 0.43 seconds ---
 
 
 
@@ -228,17 +228,17 @@ Deterministic nowcast
     ARI model order:            1
     localization window radius: 64.0
 
-    Detecting features... found 15 blobs in 0.80 seconds.
-    Transforming to Lagrangian coordinates... 0.08 seconds.
-    Estimating the first convolution kernel... 9.25 seconds.
-    Estimating the ARI(p,1) parameters... 0.16 seconds.
-    Estimating the second convolution kernel... 8.08 seconds.
+    Detecting features... found 15 blobs in 0.90 seconds.
+    Transforming to Lagrangian coordinates... 0.07 seconds.
+    Estimating the first convolution kernel... 9.69 seconds.
+    Estimating the ARI(p,1) parameters... 0.17 seconds.
+    Estimating the second convolution kernel... 8.39 seconds.
     Computing nowcast for time step 1... 0.39 seconds.
-    Computing nowcast for time step 2... 0.39 seconds.
-    Computing nowcast for time step 3... 0.40 seconds.
+    Computing nowcast for time step 2... 0.40 seconds.
+    Computing nowcast for time step 3... 0.41 seconds.
     Computing nowcast for time step 4... 0.40 seconds.
-    Computing nowcast for time step 5... 0.40 seconds.
-    Computing nowcast for time step 6... 0.40 seconds.
+    Computing nowcast for time step 5... 0.42 seconds.
+    Computing nowcast for time step 6... 0.41 seconds.
     Computing S-PROG nowcast:
     -------------------------
 
@@ -416,13 +416,13 @@ Probabilistic nowcast
     parallel workers:           8
     seed:                       None
 
-    Detecting features... found 15 blobs in 0.84 seconds.
-    Transforming to Lagrangian coordinates... 0.08 seconds.
-    Estimating the first convolution kernel... 8.83 seconds.
-    Estimating the ARI(p,1) parameters... 0.15 seconds.
-    Estimating the second convolution kernel... 7.67 seconds.
-    Estimating forecast errors... 0.56 seconds.
-    Estimating perturbation parameters... 35.05 seconds.
+    Detecting features... found 15 blobs in 0.91 seconds.
+    Transforming to Lagrangian coordinates... 0.07 seconds.
+    Estimating the first convolution kernel... 10.04 seconds.
+    Estimating the ARI(p,1) parameters... 0.19 seconds.
+    Estimating the second convolution kernel... 8.95 seconds.
+    Estimating forecast errors... 0.68 seconds.
+    Estimating perturbation parameters... 55.58 seconds.
     Computing STEPS nowcast:
     ------------------------
 
@@ -532,7 +532,7 @@ considerably better than STEPS.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 3 minutes  21.655 seconds)
+   **Total running time of the script:** ( 4 minutes  5.920 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_linda_nowcasts.py:

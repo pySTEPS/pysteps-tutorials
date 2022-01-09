@@ -267,7 +267,7 @@ at minimizing a cost function between the displaced and the reference image.
     Sector Shape: (320, 355)
     Minimizing
 
-    residuals 3102581.058171551
+    residuals 3102581.058171556
     smoothness_penalty 0.0
     original image shape: (3, 640, 710)
     padded image shape: (3, 640, 712)
@@ -277,8 +277,8 @@ at minimizing a cost function between the displaced and the reference image.
     Sector Shape: (160, 178)
     Minimizing
 
-    residuals 2507515.978176187
-    smoothness_penalty 0.4972321040151195
+    residuals 2507938.1871230733
+    smoothness_penalty 0.4988482701522842
     original image shape: (3, 640, 710)
     padded image shape: (3, 640, 720)
     padded template_image image shape: (3, 640, 720)
@@ -287,8 +287,8 @@ at minimizing a cost function between the displaced and the reference image.
     Sector Shape: (40, 45)
     Minimizing
 
-    residuals 2261599.3328208188
-    smoothness_penalty 40.0274102790147
+    residuals 2263201.9737017862
+    smoothness_penalty 39.23306361385489
     original image shape: (3, 640, 710)
     padded image shape: (3, 640, 736)
     padded template_image image shape: (3, 640, 736)
@@ -297,8 +297,8 @@ at minimizing a cost function between the displaced and the reference image.
     Sector Shape: (20, 23)
     Minimizing
 
-    residuals 2283873.2019218802
-    smoothness_penalty 186.8423811170226
+    residuals 2261850.2459139777
+    smoothness_penalty 188.92346182007842
 
 
 
@@ -348,11 +348,11 @@ estimating the motion, here we are going to use all the available 10 fields.
     -----
     DARTS
     -----
-      Computing the FFT of the reflectivity fields...Done in 0.28 seconds.
-      Constructing the y-vector...Done in 0.31 seconds.
-      Constructing the H-matrix...Done in 1.28 seconds.
-      Solving the linear systems...Done in 0.10 seconds.
-    --- 2.010958194732666 seconds ---
+      Computing the FFT of the reflectivity fields...Done in 0.29 seconds.
+      Constructing the y-vector...Done in 0.28 seconds.
+      Constructing the H-matrix...Done in 1.61 seconds.
+      Solving the linear systems...Done in 0.13 seconds.
+    --- 2.349257469177246 seconds ---
 
 
 
@@ -396,7 +396,7 @@ inconsitency during the solution of the optical flow equations.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  24.038 seconds)
+   **Total running time of the script:** ( 1 minutes  28.593 seconds)
 
 
 .. _sphx_glr_download_examples_gallery_plot_optical_flow.py:
