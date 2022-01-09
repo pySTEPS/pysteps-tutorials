@@ -77,7 +77,7 @@ jobs:
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
         run: |
-          render_branch="${event_branch}_rendered"
+          render_branch="${EVENT_BRANCH}_rendered"
           
           # Check if the Linked repository current commit corresponds to a tag
           if [[ "${event_branch}" == "main" ]]; then
