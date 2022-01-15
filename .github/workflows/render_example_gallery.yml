@@ -81,8 +81,8 @@ jobs:
           #  [RTD_BRANCH]: decouple_triggering
           
           event_branch=$(parse_keyword "EVENT_BRANCH") || exit 2           
-          pysteps_branch=$(parse_keyword "EVENT_BRANCH") || exit 3
-          rtd_branch=$(parse_keyword "EVENT_BRANCH") || exit 4
+          pysteps_branch=$(parse_keyword "PYSTEPS_BRANCH") || exit 3
+          rtd_branch=$(parse_keyword "RTD_BRANCH") || exit 4
           
           echo "::set-output name=event_branch::${event_branch}" 
           echo "::set-output name=pysteps_branch::${pysteps_branch}" 
