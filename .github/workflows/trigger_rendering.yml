@@ -49,7 +49,7 @@ jobs:
           
           pysteps_branch=${EVENT_BRANCH}
           # Adjust the different naming conventions between the repositories
-          if [[ ${EVENT_BRANCH} =="main" ]]; then
+          if [[ "${EVENT_BRANCH}"=="main" ]]; then
             pysteps_branch=master  
           else
             pysteps_branch=${EVENT_BRANCH}
