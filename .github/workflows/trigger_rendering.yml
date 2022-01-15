@@ -46,11 +46,10 @@ jobs:
         run: |
           # We use the pysteps branch that matches the local branch that triggered
           # this workflow.
-          set -x
           pysteps_branch=${EVENT_BRANCH}
           
           # Adjust the different naming conventions between the repositories
-          if [[ "${pysteps_branch}"=="main" ]]; then
+          if [[ "${pysteps_branch}"="main" ]]; then
             pysteps_branch=master
           fi
           
