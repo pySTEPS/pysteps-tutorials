@@ -43,47 +43,46 @@ jobs:
         id: set_pysteps_branch
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
-        run: |    
+        run: |
           # We use the pysteps branch that matches the local branch that triggered
           # this workflow.
-          
           pysteps_branch=${EVENT_BRANCH}
+          
           # Adjust the different naming conventions between the repositories
-          if [[ "${EVENT_BRANCH}"=="main" ]]; then
-            pysteps_branch=master  
-          else
-            pysteps_branch=${EVENT_BRANCH}
-          fi          
+          if [[ "${pysteps_branch}" = "main" ]]; then
+            pysteps_branch=master
+          fi
+          
           echo "::set-output name=pysteps_branch::${pysteps_branch}"
+
+      - name: Set RTD Branch
+        id: set_rtd_branch
+        env:
+          PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
+          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+        run: |
+          # If the pysteps branch exists, trigger RTD for that branch
+          echo "Checking if the $PYSTEPS_BRANCH pysteps branch exists"          
+          git ls-remote --exit-code --heads ${PYSTEPS_REPO_URL} $PYSTEPS_BRANCH && rtd_branch=${PYSTEPS_BRANCH}
+          
+          echo "::set-output name=rtd_branch::${rtd_branch}"
 
       - name: Print debug information
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+          RTD_BRANCH: ${{steps.set_rtd_branch.outputs.rtd_branch}}
         run: |
           echo "EVENT_BRANCH=${EVENT_BRANCH}"
           echo "PYSTEPS_BRANCH=${PYSTEPS_BRANCH}"
-
-      - name: Checkout pysteps repository
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ env.PYSTEPS_MAIN_REPO }}
-          path: ${{ env.PYSTEPS_MAIN_REPO }}
-          ref: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
-
-      - name: Check that the pysteps branch exists
-        env:
-          PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
-          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
-        run: |
-          echo "Checking if the $PYSTEPS_BRANCH pysteps branch exists"          
-          git ls-remote --exit-code --heads ${PYSTEPS_REPO_URL} $PYSTEPS_BRANCH          
+          echo "RTD_BRANCH=${RTD_BRANCH}"
 
       - name: Push rendering commit to the "rendering_logs" branch
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
           PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
+          RTD_BRANCH: ${{steps.set_rtd_branch.outputs.rtd_branch}}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -91,13 +90,13 @@ jobs:
           git ls-remote --quiet --exit-code --heads https://github.com/${GITHUB_REPOSITORY}.git $PYSTEPS_BRANCH         
           git fetch origin rendering_logs || SWITCH_OPTS="-c"
           git switch ${SWITCH_OPTS} rendering_logs
-          
+                    
           git commit --allow-empty \
             -m "[TRIGGER] Trigger rendering from ${GITHUB_SHA::8}" \
             -m "[EVENT_BRANCH]:${EVENT_BRANCH}
-            [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
-            [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
-            https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
+          [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
+          [RTD_BRANCH]: ${RTD_BRANCH}
+          https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
 
       - name: Push changes to the rendered branch
         uses: ad-m/github-push-action@master

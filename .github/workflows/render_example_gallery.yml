@@ -12,13 +12,11 @@ env:
 
 on:
   push:
-    branches: [ main, dev, scripts ]
-  pull_request:
-    branches: [ main, dev ]
+    branches: [ rendering_logs ]
 
 jobs:
-  render_examples_gallery:
-    name: Execute examples and generate the examples gallery
+  check_if_rendering_is_needed:
+    name: Check of the commit message include the [TRIGGER] keyword
     runs-on: "ubuntu-latest"
 
     defaults:
@@ -26,65 +24,90 @@ jobs:
         shell: bash -l {0}
 
     outputs:
-      rtd_branch: ${{steps.set_destination_branch.outputs.render_branch}}
+      rtd_branch: ${{steps.set_render_branch.outputs.has_trigger_flag}}
+
+    steps:
+      - name: Parse commit message
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        id: parse_commit_msg
+        run: |
+          shopt -s expand_aliases
+          
+          out=$(echo ${COMMIT_MSG} | grep -q "\[TRIGGER\]")
+          [[ $? -eq 0 ]] && has_trigger_flag="yes" || has_trigger_flag="no"  
+          
+          echo "::set-output name=has_trigger_flag::${has_trigger_flag}" 
+
+  render_examples_gallery:
+    name: Render the example gallery
+    runs-on: "ubuntu-latest"
+
+    needs: check_if_rendering_is_needed
+    if: needs.check_if_rendering_is_needed.outputs.has_trigger_flag == 'yes'
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    outputs:
+      rtd_branch: ${{steps.set_render_branch.outputs.render_branch}}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Get the name of the local branch that trigger the event
-        id: get_local_triggering_branch
+      - name: Parse commit message
+        id: parse_commit_msg
         run: |
-          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
-            event_branch=$(echo ${GITHUB_REF##*/})
-          elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            event_branch=$(echo $GITHUB_BASE_REF)
-          else
-            event_branch=unknown
-          fi
-          echo "::set-output name=event_branch::${event_branch}"
-
-      - name: Set the pysteps branch to use
-        id: set_pysteps_branch
-        run: |     
-          # By default, we always checkout the master branch from the external repo.
-          pysteps_branch=master
-          
-          # If the current workflow was triggered externally an empty commit from the 
-          # pysteps main repo CI, let's read the commit message and find which branch
-          # orginated the action. We will checkout that branch to build the examples
-          # gallery.
           shopt -s expand_aliases
           alias print_commit_msg="git log -1 --pretty=%B"
           
-          is_externally_triggered=$(print_commit_msg | head -1 | grep -c "\[TRIGGER\]")          
-          if [[ ${is_externally_triggered} -gt 0 ]]; then
-            branch=$(print_commit_msg | grep "\[Branch\]:" | cut -d ":" -f 2 | tr -d " ")            
-            [[ ! -z ${branch} ]] && pysteps_branch=${branch}
-          fi
+          function parse_keyword () {          
+            keyword=$(print_commit_msg | grep "\[$1\]:" | cut -d ":" -f 2 | tr -d " ")
+            [[ $? -ne 0 ]] && return 1            
+            [[ -z "${keyword}" ]] && return 2
           
-          echo "::set-output name=pysteps_branch::${pysteps_branch}"
-          echo "pysteps_branch::${pysteps_branch}"
+            echo $keyword
+            return 0
+          }
+          
+          # Example commit message
+          #
+          #  [TRIGGER] Trigger rendering from c0268d3
+          #
+          #  [EVENT_BRANCH]:decouple_triggering
+          #  [PYSTEPS_BRANCH]: decouple_triggering
+          #  [RTD_BRANCH]: decouple_triggering
+          
+          event_branch=$(parse_keyword "EVENT_BRANCH") || exit 2           
+          pysteps_branch=$(parse_keyword "EVENT_BRANCH") || exit 3
+          rtd_branch=$(parse_keyword "EVENT_BRANCH") || exit 4
+          
+          echo "::set-output name=event_branch::${event_branch}" 
+          echo "::set-output name=pysteps_branch::${pysteps_branch}" 
+          echo "::set-output name=rtd_branch::${rtd_branch}" 
 
+      #  render_examples_gallery:
       - name: Checkout pysteps repository at the branch that triggered the event
         uses: actions/checkout@v2
         with:
           repository: ${{ env.PYSTEPS_MAIN_REPO }}
           path: ${{ env.PYSTEPS_MAIN_REPO }}
-          ref: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+          ref: ${{steps.parse_commit_msg.outputs.pysteps_branch}}
 
-      - name: Determine destination branch for the rendered example gallery and the RTD branch
-        id: set_destination_branch
+      - name: Determine render branch name
+        id: set_render_branch
         working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
         env:
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          EVENT_BRANCH: ${{steps.parse_commit_msg.outputs.event_branch}}
         run: |
           render_branch="${EVENT_BRANCH}_rendered"
           
           # Check if the Linked repository current commit corresponds to a tag
           if [[ "${event_branch}" == "main" ]]; then
             render_branch="latest"
-            
+          
             # Tagged version are rendered in their own branch
             pysteps_tag=$(git name-rev --name-only --tags HEAD)            
             [[ "${pysteps_tag}" != "undefined" ]] && render_branch="${pysteps_tag}"            
@@ -93,9 +116,10 @@ jobs:
 
       - name: Print debug information
         env:
-          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
-          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+          RENDER_BRANCH: ${{steps.set_render_branch.outputs.render_branch}}
+          EVENT_BRANCH: ${{steps.parse_commit_msg.outputs.event_branch}}
+          PYSTEPS_BRANCH: ${{steps.parse_commit_msg.outputs.pysteps_branch}}
+          RTD_BRANCH: ${{steps.parse_commit_msg.outputs.rtd_branch}}
         run: |
           echo "EVENT_BRANCH=${EVENT_BRANCH}"          
           echo "GITHUB_SHA=${GITHUB_SHA}"
@@ -134,7 +158,7 @@ jobs:
 
       - name: Commit the generated examples gallery
         env:
-          RENDER_BRANCH: ${{steps.set_destination_branch.outputs.render_branch}}
+          RENDER_BRANCH: ${{steps.set_render_branch.outputs.render_branch}}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -169,7 +193,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{steps.set_destination_branch.outputs.render_branch}}
+          branch: ${{steps.set_render_branch.outputs.render_branch}}
 
 #  trigger_rtd:
 #    # Task adapted from the wradlib project
