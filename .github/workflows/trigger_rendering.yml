@@ -82,6 +82,7 @@ jobs:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
           PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
+          RTD_BRANCH: ${{steps.set_rtd_branch.outputs.rtd_branch}}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -94,7 +95,7 @@ jobs:
             -m "[TRIGGER] Trigger rendering from ${GITHUB_SHA::8}" \
             -m "[EVENT_BRANCH]:${EVENT_BRANCH}
           [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
-          [RTD_BRANCH]: ${PYSTEPS_BRANCH}
+          [RTD_BRANCH]: ${RTD_BRANCH}
           https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
 
       - name: Push changes to the rendered branch
