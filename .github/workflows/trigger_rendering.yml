@@ -1,0 +1,105 @@
+# Push an empty commit to the `rendering_logs` branch to trigger the documentation
+# rendering. The commits contain the information on the source and destination
+# branches for the documentation.
+
+name: Send rendering commit rendering_logs branch
+
+env:
+  # URL for the external repository linked with the notebooks in this project.
+  PYSTEPS_MAIN_REPO: pySTEPS/pysteps
+
+on:
+  push:
+    branches: [ main, decouple_triggering ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  send_commit_to_trigger_gallery_rendering:
+    name: Push an empty commit to the "rendering_logs" branch
+    runs-on: "ubuntu-latest"
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get the name of the local branch that trigger the event
+        id: get_local_triggering_branch
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            event_branch=$(echo ${GITHUB_REF##*/})
+          elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            event_branch=$(echo $GITHUB_BASE_REF)
+          else
+            event_branch=unknown
+          fi
+          echo "::set-output name=event_branch::${event_branch}"
+
+      - name: Set the pysteps branch to use
+        id: set_pysteps_branch
+        env:
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+        run: |    
+          # We use the pysteps branch that matches the local branch that triggered
+          # this workflow.
+          
+          pysteps_branch=${EVENT_BRANCH}
+          # Adjust the different naming conventions between the repositories
+          if [[ ${EVENT_BRANCH} =="main" ]]; then
+            pysteps_branch=master  
+          else
+            pysteps_branch=${EVENT_BRANCH}
+          fi          
+          echo "::set-output name=pysteps_branch::${pysteps_branch}"
+
+      - name: Print debug information
+        env:
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+        run: |
+          echo "EVENT_BRANCH=${EVENT_BRANCH}"
+          echo "PYSTEPS_BRANCH=${PYSTEPS_BRANCH}"
+
+      - name: Checkout pysteps repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.PYSTEPS_MAIN_REPO }}
+          path: ${{ env.PYSTEPS_MAIN_REPO }}
+          ref: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+
+      - name: Check that the pysteps branch exists
+        env:
+          PYSTEPS_REPO: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
+          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+        run: |
+          echo "Checking if the $PYSTEPS_BRANCH pysteps branch exists"          
+          git ls-remote --exit-code --heads https://github.com/${PYSTEPS_REPO}.git $PYSTEPS_BRANCH          
+
+      - name: Push rendering commit to the "rendering_logs" branch
+        env:
+          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          git ls-remote --exit-code --heads https://github.com/${PYSTEPS_REPO}.git $PYSTEPS_BRANCH         
+          git fetch origin rendering_logs || SWITCH_OPTS="-c"
+          git switch ${SWITCH_OPTS} rendering_logs
+          
+          git commit --allow-empty \
+            -m "[TRIGGER] Trigger rendering from ${GITHUB_SHA::8}" \
+            -m "[EVENT_BRANCH]:${EVENT_BRANCH}
+            [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
+            [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
+            https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
+
+      - name: Push changes to the rendered branch
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{steps.set_destination_branch.outputs.render_branch}}
