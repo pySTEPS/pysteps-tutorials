@@ -53,14 +53,7 @@ jobs:
             pysteps_branch=master
           fi
           
-          echo "::set-output name=pysteps_branch::${pysteps_branch}"          
-
-      - name: Checkout pysteps repository
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ env.PYSTEPS_MAIN_REPO }}
-          path: ${{ env.PYSTEPS_MAIN_REPO }}
-          ref: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+          echo "::set-output name=pysteps_branch::${pysteps_branch}"
 
       - name: Set RTD Branch
         id: set_rtd_branch
