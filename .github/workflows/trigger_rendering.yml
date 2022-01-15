@@ -83,11 +83,12 @@ jobs:
         env:
           EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
+          PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           
-          git ls-remote --exit-code --heads https://github.com/${PYSTEPS_REPO}.git $PYSTEPS_BRANCH         
+          git ls-remote --quiet --exit-code --heads https://github.com/${GITHUB_REPOSITORY}.git $PYSTEPS_BRANCH         
           git fetch origin rendering_logs || SWITCH_OPTS="-c"
           git switch ${SWITCH_OPTS} rendering_logs
           
@@ -102,4 +103,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{steps.set_destination_branch.outputs.render_branch}}
+          branch: rendering_logs
