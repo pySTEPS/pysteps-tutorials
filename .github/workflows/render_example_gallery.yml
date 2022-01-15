@@ -82,7 +82,9 @@ jobs:
           
           event_branch=$(parse_keyword "EVENT_BRANCH") || exit 2           
           pysteps_branch=$(parse_keyword "PYSTEPS_BRANCH") || exit 3
-          rtd_branch=$(parse_keyword "RTD_BRANCH") || exit 4
+          
+          rtd_branch=$(parse_keyword "RTD_BRANCH")
+          [[ $? -eq 1 ]] && exit 4
           
           echo "::set-output name=event_branch::${event_branch}" 
           echo "::set-output name=pysteps_branch::${pysteps_branch}" 
