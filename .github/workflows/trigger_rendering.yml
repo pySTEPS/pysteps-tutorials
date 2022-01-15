@@ -73,11 +73,11 @@ jobs:
 
       - name: Check that the pysteps branch exists
         env:
-          PYSTEPS_REPO: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
+          PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
         run: |
           echo "Checking if the $PYSTEPS_BRANCH pysteps branch exists"          
-          git ls-remote --exit-code --heads https://github.com/${PYSTEPS_REPO}.git $PYSTEPS_BRANCH          
+          git ls-remote --exit-code --heads ${PYSTEPS_REPO_URL} $PYSTEPS_BRANCH          
 
       - name: Push rendering commit to the "rendering_logs" branch
         env:
