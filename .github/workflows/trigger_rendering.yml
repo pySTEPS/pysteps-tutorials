@@ -95,9 +95,9 @@ jobs:
           git commit --allow-empty \
             -m "[TRIGGER] Trigger rendering from ${GITHUB_SHA::8}" \
             -m "[EVENT_BRANCH]:${EVENT_BRANCH}
-            [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
-            [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
-            https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
+          [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
+          [RTD_BRANCH]: ${PYSTEPS_BRANCH}
+          https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
 
       - name: Push changes to the rendered branch
         uses: ad-m/github-push-action@master
