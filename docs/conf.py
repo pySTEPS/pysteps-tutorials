@@ -18,7 +18,7 @@ extensions = [
 
 sphinx_gallery_conf = {
     "examples_dirs": "../examples",
-    "gallery_dirs": "examples_gallery",
+    "gallery_dirs": "example_gallery",
     "filename_pattern": r"/*\.py",
 }
 

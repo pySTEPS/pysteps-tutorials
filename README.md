@@ -1,3 +1,3 @@
 # Pysteps tutorials
 
-This repository contains a series of tutorials for [Pysteps](https://pysteps.readthedocs.io/en/latest/) in the form of jupyter notebooks.
+This repository contains a series of tutorials for pysteps [Pysteps](https://pysteps.readthedocs.io/en/latest/).
