@@ -11,8 +11,6 @@ env:
 on:
   push:
     branches: [ main, decouple_triggering ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   send_commit_to_trigger_gallery_rendering:
@@ -31,22 +29,22 @@ jobs:
         id: get_local_triggering_branch
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
-            event_branch=$(echo ${GITHUB_REF##*/})
+            gallery_branch=$(echo ${GITHUB_REF##*/})
           elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            event_branch=$(echo $GITHUB_BASE_REF)
+            gallery_branch=$(echo $GITHUB_BASE_REF)
           else
-            event_branch=unknown
+            gallery_branch=unknown
           fi
-          echo "::set-output name=event_branch::${event_branch}"
+          echo "::set-output name=gallery_branch::${gallery_branch}"
 
       - name: Set the pysteps branch to use
         id: set_pysteps_branch
         env:
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          GALLERY_BRANCH: ${{steps.get_local_triggering_branch.outputs.gallery_branch}}
         run: |
           # We use the pysteps branch that matches the local branch that triggered
           # this workflow.
-          pysteps_branch=${EVENT_BRANCH}
+          pysteps_branch=${GALLERY_BRANCH}
           
           # Adjust the different naming conventions between the repositories
           if [[ "${pysteps_branch}" = "main" ]]; then
@@ -69,17 +67,17 @@ jobs:
 
       - name: Print debug information
         env:
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          GALLERY_BRANCH: ${{steps.get_local_triggering_branch.outputs.gallery_branch}}
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
           RTD_BRANCH: ${{steps.set_rtd_branch.outputs.rtd_branch}}
         run: |
-          echo "EVENT_BRANCH=${EVENT_BRANCH}"
+          echo "GALLERY_BRANCH=${GALLERY_BRANCH}"
           echo "PYSTEPS_BRANCH=${PYSTEPS_BRANCH}"
           echo "RTD_BRANCH=${RTD_BRANCH}"
 
       - name: Push rendering commit to the "rendering_logs" branch
         env:
-          EVENT_BRANCH: ${{steps.get_local_triggering_branch.outputs.event_branch}}
+          GALLERY_BRANCH: ${{steps.get_local_triggering_branch.outputs.gallery_branch}}
           PYSTEPS_BRANCH: ${{steps.set_pysteps_branch.outputs.pysteps_branch}}
           PYSTEPS_REPO_URL: https://github.com/${{ env.PYSTEPS_MAIN_REPO }}.git
           RTD_BRANCH: ${{steps.set_rtd_branch.outputs.rtd_branch}}
@@ -93,7 +91,7 @@ jobs:
                     
           git commit --allow-empty \
             -m "[TRIGGER] Trigger rendering from ${GITHUB_SHA::8}" \
-            -m "[EVENT_BRANCH]:${EVENT_BRANCH}
+            -m "[GALLERY_BRANCH]:${GALLERY_BRANCH}
           [PYSTEPS_BRANCH]: ${PYSTEPS_BRANCH}
           [RTD_BRANCH]: ${RTD_BRANCH}
           https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"  
