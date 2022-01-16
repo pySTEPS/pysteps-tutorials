@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cascade decomposition &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="STEPS nowcast" href="plot_steps_nowcast.html" />
+    <link rel="prev" title="Data transformations" href="data_transformations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cascade decomposition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-precipitation-field">Read precipitation field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d-fourier-spectrum">2D Fourier spectrum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Cascade decomposition</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Cascade decomposition</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/plot_cascade_decomposition.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-plot-cascade-decomposition-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="cascade-decomposition">
+<span id="sphx-glr-example-gallery-plot-cascade-decomposition-py"></span><h1>Cascade decomposition<a class="headerlink" href="#cascade-decomposition" title="Permalink to this headline"></a></h1>
+<p>This example script shows how to compute and plot the cascade decompositon of
+a single radar precipitation field in pysteps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span><span class="p">,</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">pysteps.cascade.bandpass_filters</span> <span class="kn">import</span> <span class="n">filter_gaussian</span>
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span>
+<span class="kn">from</span> <span class="nn">pysteps.cascade.decomposition</span> <span class="kn">import</span> <span class="n">decomposition_fft</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">transformation</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span>
+</pre></div>
+</div>
+<section id="read-precipitation-field">
+<h2>Read precipitation field<a class="headerlink" href="#read-precipitation-field" title="Permalink to this headline"></a></h2>
+<p>First thing,  the radar composite is imported and transformed in units
+of dB.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the example radar composite</span>
+<span class="n">root_path</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;fmi&quot;</span><span class="p">][</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">root_path</span><span class="p">,</span> <span class="s2">&quot;20160928&quot;</span><span class="p">,</span> <span class="s2">&quot;201609281600_fmi.radar.composite.lowest_FIN_SUOMI1.pgm.gz&quot;</span>
+<span class="p">)</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">import_fmi_pgm</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">gzipped</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Convert to rain rate</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Nicely print the metadata</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Plot the rainfall field</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Log-transform the data</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zerovalue</span><span class="o">=-</span><span class="mf">15.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_cascade_decomposition_001.png" srcset="../_images/sphx_glr_plot_cascade_decomposition_001.png" alt="mm/h" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;accutime&#39;: 5.0,
+ &#39;cartesian_unit&#39;: &#39;m&#39;,
+ &#39;institution&#39;: &#39;Finnish Meteorological Institute&#39;,
+ &#39;projection&#39;: &#39;+proj=stere  +lon_0=25E +lat_0=90N +lat_ts=60 +a=6371288 &#39;
+               &#39;+x_0=380886.310 +y_0=3395677.920 +no_defs&#39;,
+ &#39;threshold&#39;: 0.0002548805471873859,
+ &#39;transform&#39;: None,
+ &#39;unit&#39;: &#39;mm/h&#39;,
+ &#39;x1&#39;: 0.0049823258887045085,
+ &#39;x2&#39;: 759752.2852757066,
+ &#39;xpixelsize&#39;: 999.674053,
+ &#39;y1&#39;: 0.009731985162943602,
+ &#39;y2&#39;: 1225544.6588913496,
+ &#39;yorigin&#39;: &#39;upper&#39;,
+ &#39;ypixelsize&#39;: 999.62859,
+ &#39;zerovalue&#39;: 0.0,
+ &#39;zr_a&#39;: 223.0,
+ &#39;zr_b&#39;: 1.53}
+</pre></div>
+</div>
+</section>
+<section id="d-fourier-spectrum">
+<h2>2D Fourier spectrum<a class="headerlink" href="#d-fourier-spectrum" title="Permalink to this headline"></a></h2>
+<p>Compute and plot the 2D Fourier power spectrum of the precipitaton field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set Nans as the fill value</span>
+<span class="n">R</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">R</span><span class="p">)]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;zerovalue&quot;</span><span class="p">]</span>
+
+<span class="c1"># Compute the Fourier transform of the input field</span>
+<span class="n">F</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="n">R</span><span class="p">)))</span>
+
+<span class="c1"># Plot the power spectrum</span>
+<span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">F</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">N</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">M</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">M</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavenumber $k_x$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Wavenumber $k_y$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Log-power spectrum of R&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_cascade_decomposition_002.png" srcset="../_images/sphx_glr_plot_cascade_decomposition_002.png" alt="Log-power spectrum of R" class = "sphx-glr-single-img"/></section>
+<section id="id1">
+<h2>Cascade decomposition<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<p>First, construct a set of Gaussian bandpass filters and plot the corresponding
+1D filters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num_cascade_levels</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="c1"># Construct the Gaussian bandpass filters</span>
+<span class="nb">filter</span> <span class="o">=</span> <span class="n">filter_gaussian</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">num_cascade_levels</span><span class="p">)</span>
+
+<span class="c1"># Plot the bandpass filter weights</span>
+<span class="n">L</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_cascade_levels</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">L</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">filter</span><span class="p">[</span><span class="s2">&quot;weights_1d&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">,</span> <span class="p">:])),</span>
+        <span class="nb">filter</span><span class="p">[</span><span class="s2">&quot;weights_1d&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="s2">&quot;k-&quot;</span><span class="p">,</span>
+        <span class="n">base</span><span class="o">=</span><span class="nb">pow</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">L</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_cascade_levels</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">L</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="nb">filter</span><span class="p">[</span><span class="s2">&quot;central_wavenumbers&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xt</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cf</span> <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">[</span><span class="s2">&quot;central_wavenumbers&quot;</span><span class="p">]])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Radial wavenumber $|\mathbf</span><span class="si">{k}</span><span class="s2">|$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Normalized weight&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Bandpass filter weights&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_cascade_decomposition_003.png" srcset="../_images/sphx_glr_plot_cascade_decomposition_003.png" alt="Bandpass filter weights" class = "sphx-glr-single-img"/><p>Finally, apply the 2D Gaussian filters to decompose the radar rainfall field
+into a set of cascade levels of decreasing spatial scale and plot them.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">decomp</span> <span class="o">=</span> <span class="n">decomposition_fft</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">compute_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plot the normalized cascade levels</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_cascade_levels</span><span class="p">):</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;means&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;stds&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">5</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decomp</span><span class="p">[</span><span class="s2">&quot;cascade_levels&quot;</span><span class="p">][</span><span class="mi">6</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Observed&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 1&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 2&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 3&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 4&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 5&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 6&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Level 7&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 4</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_cascade_decomposition_004.png" srcset="../_images/sphx_glr_plot_cascade_decomposition_004.png" alt="Observed, Level 1, Level 2, Level 3, Level 4, Level 5, Level 6, Level 7" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.664 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-plot-cascade-decomposition-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/39aaa7b589bc794c9b3ee4ffbeb08120/plot_cascade_decomposition.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_cascade_decomposition.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/68b9d34d4b9ee1546f1cff952bbb40a7/plot_cascade_decomposition.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_cascade_decomposition.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data_transformations.html" class="btn btn-neutral float-left" title="Data transformations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_steps_nowcast.html" class="btn btn-neutral float-right" title="STEPS nowcast" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

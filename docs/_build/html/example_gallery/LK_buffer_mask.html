@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handling of no-data in Lucas-Kanade &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ANVIL nowcast" href="anvil_nowcast.html" />
+    <link rel="prev" title="Ensemble verification" href="plot_ensemble_verification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Handling of no-data in Lucas-Kanade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-radar-input-images">Read the radar input images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-the-data-from-the-archive">Load the data from the archive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preprocess-the-data">Preprocess the data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sparse-lucas-kanade">Sparse Lucas-Kanade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dense-lucas-kanade">Dense Lucas-Kanade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#forecast-skill">Forecast skill</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Handling of no-data in Lucas-Kanade</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/LK_buffer_mask.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-lk-buffer-mask-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="handling-of-no-data-in-lucas-kanade">
+<span id="sphx-glr-example-gallery-lk-buffer-mask-py"></span><h1>Handling of no-data in Lucas-Kanade<a class="headerlink" href="#handling-of-no-data-in-lucas-kanade" title="Permalink to this headline"></a></h1>
+<p>Areas of missing data in radar images are typically caused by visibility limits
+such as beam blockage and the radar coverage itself. These artifacts can mislead
+the echo tracking algorithms. For instance, precipitation leaving the domain
+might be erroneously detected as having nearly stationary velocity.</p>
+<p>This example shows how the Lucas-Kanade algorithm can be tuned to avoid the
+erroneous interpretation of velocities near the maximum range of the radars by
+buffering the no-data mask in the radar image in order to exclude all vectors
+detected nearby no-data areas.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span><span class="p">,</span> <span class="n">colors</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">motion</span><span class="p">,</span> <span class="n">nowcasts</span><span class="p">,</span> <span class="n">rcparams</span><span class="p">,</span> <span class="n">verification</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">transformation</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span><span class="p">,</span> <span class="n">quiver</span>
+</pre></div>
+</div>
+<section id="read-the-radar-input-images">
+<h2>Read the radar input images<a class="headerlink" href="#read-the-radar-input-images" title="Permalink to this headline"></a></h2>
+<p>First, we will import the sequence of radar composites.
+You need the pysteps-data archive downloaded and the pystepsrc file
+configured with the data_source paths pointing to data folders.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Selected case</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201607112100&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="load-the-data-from-the-archive">
+<h3>Load the data from the archive<a class="headerlink" href="#load-the-data-from-the-archive" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root_path</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">path_fmt</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">fn_pattern</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">fn_ext</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">]</span>
+
+<span class="c1"># Find the two input files from the archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_prev_files</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the radar composites</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+
+<span class="k">del</span> <span class="n">quality</span>  <span class="c1"># Not used</span>
+</pre></div>
+</div>
+</section>
+<section id="preprocess-the-data">
+<h3>Preprocess the data<a class="headerlink" href="#preprocess-the-data" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert to mm/h</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Keep the reference frame in mm/h and its mask (for plotting purposes)</span>
+<span class="n">ref_mm</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ref_mm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">mask</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ref_mm</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="c1"># Log-transform the data [dBR]</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zerovalue</span><span class="o">=-</span><span class="mf">15.0</span><span class="p">)</span>
+
+<span class="c1"># Keep the reference frame in dBR (for plotting purposes)</span>
+<span class="n">ref_dbr</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ref_dbr</span><span class="p">[</span><span class="n">ref_dbr</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="c1"># Plot the reference field</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">ref_mm</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Reference field&quot;</span><span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">620</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_LK_buffer_mask_001.png" srcset="../_images/sphx_glr_LK_buffer_mask_001.png" alt="Reference field, mm/h" class = "sphx-glr-single-img"/><p>Notice the “half-in, half-out” precipitation area within the blue circle.
+As we are going to show next, the tracking algorithm can erroneously interpret
+precipitation leaving the domain as stationary motion.</p>
+<p>Also note that the radar image includes NaNs in areas of missing data.
+These are used by the optical flow algorithm to define the radar mask.</p>
+</section>
+</section>
+<section id="sparse-lucas-kanade">
+<h2>Sparse Lucas-Kanade<a class="headerlink" href="#sparse-lucas-kanade" title="Permalink to this headline"></a></h2>
+<p>By setting the optional argument <code class="docutils literal notranslate"><span class="pre">dense=False</span></code> in <code class="docutils literal notranslate"><span class="pre">xy,</span> <span class="pre">uv</span> <span class="pre">=</span> <span class="pre">dense_lucaskanade(...)</span></code>,
+the LK algorithm returns the motion vectors detected by the Lucas-Kanade scheme
+without interpolating them on the grid.
+This allows us to better identify the presence of wrongly detected
+stationary motion in areas where precipitation is leaving the domain (look
+for the red dots within the blue circle in the figure below).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get Lucas-Kanade optical flow method</span>
+<span class="n">dense_lucaskanade</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;LK&quot;</span><span class="p">)</span>
+
+<span class="c1"># Mask invalid values</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_invalid</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+
+<span class="c1"># Use no buffering of the radar mask</span>
+<span class="n">fd_kwargs1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;buffer_mask&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">xy</span><span class="p">,</span> <span class="n">uv</span> <span class="o">=</span> <span class="n">dense_lucaskanade</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dense</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fd_kwargs</span><span class="o">=</span><span class="n">fd_kwargs1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_dbr</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;Greys&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;black&quot;</span><span class="p">]),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span>
+    <span class="n">xy</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">uv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">uv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="n">angles</span><span class="o">=</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span>
+    <span class="n">scale_units</span><span class="o">=</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">620</span><span class="p">,</span> <span class="mi">245</span><span class="p">),</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;buffer_mask = 0&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_LK_buffer_mask_002.png" srcset="../_images/sphx_glr_LK_buffer_mask_002.png" alt="buffer_mask = 0" class = "sphx-glr-single-img"/><p>The LK algorithm cannot distinguish missing values from no precipitation, that is,
+no-data are the same as no-echoes. As a result, the fixed boundaries produced
+by precipitation in contact with no-data areas are interpreted as stationary motion.
+One way to mitigate this effect of the boundaries is to introduce a slight buffer
+of the no-data mask so that the algorithm will ignore all the portions of the
+radar domain that are nearby no-data areas.
+This buffer can be set by the keyword argument <code class="docutils literal notranslate"><span class="pre">buffer_mask</span></code> within the
+feature detection optional arguments <code class="docutils literal notranslate"><span class="pre">fd_kwargs</span></code>.
+Note that by default <code class="docutils literal notranslate"><span class="pre">dense_lucaskanade</span></code> uses a 5-pixel buffer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># with buffer</span>
+<span class="n">buffer</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">fd_kwargs2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;buffer_mask&quot;</span><span class="p">:</span> <span class="n">buffer</span><span class="p">}</span>
+<span class="n">xy</span><span class="p">,</span> <span class="n">uv</span> <span class="o">=</span> <span class="n">dense_lucaskanade</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dense</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fd_kwargs</span><span class="o">=</span><span class="n">fd_kwargs2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_dbr</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;Greys&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;black&quot;</span><span class="p">]),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span>
+    <span class="n">xy</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">uv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">uv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="n">angles</span><span class="o">=</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span>
+    <span class="n">scale_units</span><span class="o">=</span><span class="s2">&quot;xy&quot;</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">620</span><span class="p">,</span> <span class="mi">245</span><span class="p">),</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;buffer_mask = </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_LK_buffer_mask_003.png" srcset="../_images/sphx_glr_LK_buffer_mask_003.png" alt="buffer_mask = 10" class = "sphx-glr-single-img"/></section>
+<section id="dense-lucas-kanade">
+<h2>Dense Lucas-Kanade<a class="headerlink" href="#dense-lucas-kanade" title="Permalink to this headline"></a></h2>
+<p>The above displacement vectors produced by the Lucas-Kanade method are now
+interpolated to produce a full field of motion (i.e., <code class="docutils literal notranslate"><span class="pre">dense=True</span></code>).
+By comparing the velocity of the motion fields, we can easily notice
+the negative bias that is introduced by the the erroneous interpretation of
+velocities near the maximum range of the radars.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UV1</span> <span class="o">=</span> <span class="n">dense_lucaskanade</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dense</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fd_kwargs</span><span class="o">=</span><span class="n">fd_kwargs1</span><span class="p">)</span>
+<span class="n">UV2</span> <span class="o">=</span> <span class="n">dense_lucaskanade</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dense</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fd_kwargs</span><span class="o">=</span><span class="n">fd_kwargs2</span><span class="p">)</span>
+
+<span class="n">V1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">UV1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">UV1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">V2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">UV2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">UV2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">((</span><span class="n">V1</span> <span class="o">-</span> <span class="n">V2</span><span class="p">)</span> <span class="o">/</span> <span class="n">V2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu_r</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Relative difference in motion speed&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_LK_buffer_mask_004.png" srcset="../_images/sphx_glr_LK_buffer_mask_004.png" alt="Relative difference in motion speed" class = "sphx-glr-single-img"/><p>Notice how the presence of erroneous velocity vectors produces a significantly
+slower motion field near the right edge of the domain.</p>
+</section>
+<section id="forecast-skill">
+<h2>Forecast skill<a class="headerlink" href="#forecast-skill" title="Permalink to this headline"></a></h2>
+<p>We are now going to evaluate the benefit of buffering the radar mask by computing
+the forecast skill in terms of the Spearman correlation coefficient.
+The extrapolation forecasts are computed using the dense UV motion fields
+estimated above.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the advection routine and extrapolate the last radar frame by 12 time steps</span>
+<span class="c1"># (i.e., 1 hour lead time)</span>
+<span class="n">extrapolate</span> <span class="o">=</span> <span class="n">nowcasts</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;extrapolation&quot;</span><span class="p">)</span>
+<span class="n">R</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">R</span><span class="p">)]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;zerovalue&quot;</span><span class="p">]</span>
+<span class="n">R_f1</span> <span class="o">=</span> <span class="n">extrapolate</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">UV1</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">R_f2</span> <span class="o">=</span> <span class="n">extrapolate</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">UV2</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Back-transform to rain rate</span>
+<span class="n">R_f1</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R_f1</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">R_f2</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R_f2</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Find the veriyfing observations in the archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_next_files</span><span class="o">=</span><span class="mi">12</span>
+<span class="p">)</span>
+
+<span class="c1"># Read and convert the radar composites</span>
+<span class="n">R_o</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata_o</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+<span class="n">R_o</span><span class="p">,</span> <span class="n">metadata_o</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">R_o</span><span class="p">,</span> <span class="n">metadata_o</span><span class="p">)</span>
+
+<span class="c1"># Compute Spearman correlation</span>
+<span class="n">skill</span> <span class="o">=</span> <span class="n">verification</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;corr_s&quot;</span><span class="p">)</span>
+<span class="n">score_1</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">score_2</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">score_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skill</span><span class="p">(</span><span class="n">R_f1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">R_o</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])[</span><span class="s2">&quot;corr_s&quot;</span><span class="p">])</span>
+    <span class="n">score_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skill</span><span class="p">(</span><span class="n">R_f2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">R_o</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])[</span><span class="s2">&quot;corr_s&quot;</span><span class="p">])</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span>  <span class="c1"># [min]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">score_1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;buffer_mask = 0&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">score_2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;buffer_mask = </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lead time [min]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Corr. coeff. []&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Spearman correlation&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_LK_buffer_mask_005.png" srcset="../_images/sphx_glr_LK_buffer_mask_005.png" alt="Spearman correlation" class = "sphx-glr-single-img"/><p>As expected, the corrected motion field produces better forecast skill already
+within the first hour into the nowcast.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.966 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-lk-buffer-mask-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/18c6eed7fe35d0888a7d6916c9595eb4/LK_buffer_mask.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">LK_buffer_mask.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d8974b4344e21e9fc3c5133c4f199a97/LK_buffer_mask.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">LK_buffer_mask.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plot_ensemble_verification.html" class="btn btn-neutral float-left" title="Ensemble verification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="anvil_nowcast.html" class="btn btn-neutral float-right" title="ANVIL nowcast" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

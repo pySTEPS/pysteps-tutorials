@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANVIL nowcast &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Optical flow methods convergence" href="optical_flow_methods_convergence.html" />
+    <link rel="prev" title="Handling of no-data in Lucas-Kanade" href="LK_buffer_mask.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ANVIL nowcast</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-input-data">Read the input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compute-the-advection-field">Compute the advection field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compute-the-nowcasts-and-threshold-rain-rates-below-0-5-mm-h">Compute the nowcasts and threshold rain rates below 0.5 mm/h</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-the-reference-observation-field-and-threshold-rain-rates-below-0-5-mm-h">Read the reference observation field and threshold rain rates below 0.5 mm/h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#plot-the-extrapolation-s-prog-and-anvil-nowcasts">Plot the extrapolation, S-PROG and ANVIL nowcasts.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remarks">Remarks</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>ANVIL nowcast</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/anvil_nowcast.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-anvil-nowcast-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="anvil-nowcast">
+<span id="sphx-glr-example-gallery-anvil-nowcast-py"></span><h1>ANVIL nowcast<a class="headerlink" href="#anvil-nowcast" title="Permalink to this headline"></a></h1>
+<p>This example demonstrates how to use ANVIL and the advantages compared to
+extrapolation nowcast and S-PROG.</p>
+<p>Load the libraries.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">motion</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">pysteps.nowcasts</span> <span class="kn">import</span> <span class="n">anvil</span><span class="p">,</span> <span class="n">extrapolation</span><span class="p">,</span> <span class="n">sprog</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">transformation</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span>
+</pre></div>
+</div>
+<section id="read-the-input-data">
+<h2>Read the input data<a class="headerlink" href="#read-the-input-data" title="Permalink to this headline"></a></h2>
+<p>ANVIL was originally developed to use vertically integrated liquid (VIL) as
+the input data, but the model allows using any two-dimensional input fields.
+Here we use a composite of rain rates.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201505151620&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+
+<span class="c1"># Read the data source information from rcparams</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">]</span>
+
+<span class="n">root_path</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">path_fmt</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">fn_pattern</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">fn_ext</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+
+<span class="c1"># Find the input files in the archive. Use history length of 5 timesteps</span>
+<span class="n">filenames</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_prev_files</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the input time series</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">rainrate_field</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span>
+    <span class="n">filenames</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert to rain rate (mm/h)</span>
+<span class="n">rainrate_field</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">rainrate_field</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="compute-the-advection-field">
+<h2>Compute the advection field<a class="headerlink" href="#compute-the-advection-field" title="Permalink to this headline"></a></h2>
+<p>Apply the Lucas-Kanade method with the parameters given in Pulkkinen et al.
+(2020) to compute the advection field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fd_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">fd_kwargs</span><span class="p">[</span><span class="s2">&quot;max_corners&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">fd_kwargs</span><span class="p">[</span><span class="s2">&quot;quality_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">fd_kwargs</span><span class="p">[</span><span class="s2">&quot;min_distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">fd_kwargs</span><span class="p">[</span><span class="s2">&quot;block_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">lk_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">lk_kwargs</span><span class="p">[</span><span class="s2">&quot;winsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+<span class="n">oflow_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">oflow_kwargs</span><span class="p">[</span><span class="s2">&quot;fd_kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fd_kwargs</span>
+<span class="n">oflow_kwargs</span><span class="p">[</span><span class="s2">&quot;lk_kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lk_kwargs</span>
+<span class="n">oflow_kwargs</span><span class="p">[</span><span class="s2">&quot;decl_scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">oflow</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;lucaskanade&quot;</span><span class="p">)</span>
+
+<span class="c1"># transform the input data to logarithmic scale</span>
+<span class="n">rainrate_field_log</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">rainrate_field</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span>
+<span class="p">)</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">oflow</span><span class="p">(</span><span class="n">rainrate_field_log</span><span class="p">,</span> <span class="o">**</span><span class="n">oflow_kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="compute-the-nowcasts-and-threshold-rain-rates-below-0-5-mm-h">
+<h3>Compute the nowcasts and threshold rain rates below 0.5 mm/h<a class="headerlink" href="#compute-the-nowcasts-and-threshold-rain-rates-below-0-5-mm-h" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">forecast_extrap</span> <span class="o">=</span> <span class="n">extrapolation</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate_field</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">velocity</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">extrap_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;allow_nonfinite_values&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="n">forecast_extrap</span><span class="p">[</span><span class="n">forecast_extrap</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="c1"># log-transform the data and the threshold value to dBR units for S-PROG</span>
+<span class="n">rainrate_field_db</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">rainrate_field</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zerovalue</span><span class="o">=-</span><span class="mf">15.0</span>
+<span class="p">)</span>
+<span class="n">rainrate_thr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">]),</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zerovalue</span><span class="o">=-</span><span class="mf">15.0</span>
+<span class="p">)</span>
+<span class="n">forecast_sprog</span> <span class="o">=</span> <span class="n">sprog</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate_field_db</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:],</span> <span class="n">velocity</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n_cascade_levels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">R_thr</span><span class="o">=</span><span class="n">rainrate_thr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">forecast_sprog</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">forecast_sprog</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">forecast_sprog</span><span class="p">[</span><span class="n">forecast_sprog</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="n">forecast_anvil</span> <span class="o">=</span> <span class="n">anvil</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate_field</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:],</span> <span class="n">velocity</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ar_window_radius</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">ar_order</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+<span class="n">forecast_anvil</span><span class="p">[</span><span class="n">forecast_anvil</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing S-PROG nowcast:
+-------------------------
+
+Inputs:
+-------
+input dimensions: 640x710
+
+Methods:
+--------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+conditional statistics: no
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters:
+-----------
+number of time steps:     3
+parallel threads:         1
+number of cascade levels: 8
+order of the AR(p) model: 2
+precip. intensity threshold: -3.0103
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.998538      | 0.994629      |
+-----------------------------------------
+| 2     | 0.998363      | 0.994110      |
+-----------------------------------------
+| 3     | 0.989118      | 0.961770      |
+-----------------------------------------
+| 4     | 0.971849      | 0.911114      |
+-----------------------------------------
+| 5     | 0.890493      | 0.738329      |
+-----------------------------------------
+| 6     | 0.643221      | 0.404233      |
+-----------------------------------------
+| 7     | 0.243901      | 0.095696      |
+-----------------------------------------
+| 8     | 0.031582      | 0.020539      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.835345     | -0.838033    | 0.029494     |
+------------------------------------------------------
+| 2     | 1.797922     | -0.800870    | 0.034248     |
+------------------------------------------------------
+| 3     | 1.724512     | -0.743486    | 0.098392     |
+------------------------------------------------------
+| 4     | 1.556191     | -0.601268    | 0.188260     |
+------------------------------------------------------
+| 5     | 1.125562     | -0.263976    | 0.438857     |
+------------------------------------------------------
+| 6     | 0.653645     | -0.016205    | 0.765580     |
+------------------------------------------------------
+| 7     | 0.234511     | 0.038499     | 0.969081     |
+------------------------------------------------------
+| 8     | 0.030964     | 0.019561     | 0.999310     |
+------------------------------------------------------
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+Computing ANVIL nowcast:
+------------------------
+
+Inputs:
+-------
+input dimensions: 640x710
+
+Methods:
+--------
+extrapolation:   semilagrangian
+FFT:             numpy
+
+Parameters:
+-----------
+number of time steps:        3
+parallel threads:            1
+number of cascade levels:    8
+order of the ARI(p,1) model: 2
+ARI(p,1) window radius:      25
+R(VIL) window radius:        3
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+</pre></div>
+</div>
+</section>
+<section id="read-the-reference-observation-field-and-threshold-rain-rates-below-0-5-mm-h">
+<h3>Read the reference observation field and threshold rain rates below 0.5 mm/h<a class="headerlink" href="#read-the-reference-observation-field-and-threshold-rain-rates-below-0-5-mm-h" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filenames</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_next_files</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+
+<span class="n">refobs_field</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span>
+    <span class="n">filenames</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span>
+<span class="p">)</span>
+
+<span class="n">refobs_field</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">refobs_field</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">metadata</span><span class="p">)</span>
+<span class="n">refobs_field</span><span class="p">[</span><span class="n">refobs_field</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="plot-the-extrapolation-s-prog-and-anvil-nowcasts">
+<h2>Plot the extrapolation, S-PROG and ANVIL nowcasts.<a class="headerlink" href="#plot-the-extrapolation-s-prog-and-anvil-nowcasts" title="Permalink to this headline"></a></h2>
+<p>For comparison, the observed rain rate fields are also plotted. Growth and
+decay areas are marked with red and blue circles, respectively.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_growth_decay_circles</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">360</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="mi">25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">420</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">405</span><span class="p">,</span> <span class="mi">380</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">420</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="mi">25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">535</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">330</span><span class="p">,</span> <span class="mi">470</span><span class="p">),</span> <span class="mi">35</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">505</span><span class="p">,</span> <span class="mi">205</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="mi">180</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">590</span><span class="p">,</span> <span class="mi">240</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">585</span><span class="p">,</span> <span class="mi">160</span><span class="p">),</span> <span class="mi">15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">1e9</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">321</span><span class="p">)</span>
+<span class="n">rainrate_field</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">rainrate_field</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">rainrate_field</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plot_growth_decay_circles</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Obs. </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">322</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">refobs_field</span><span class="p">)</span>
+<span class="n">plot_growth_decay_circles</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Obs. </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">)))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">323</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">forecast_extrap</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plot_growth_decay_circles</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Extrapolation +15 minutes&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">324</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">forecast_sprog</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plot_growth_decay_circles</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;S-PROG (with post-processing)</span><span class="se">\n</span><span class="s2"> +15 minutes&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">325</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">forecast_anvil</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plot_growth_decay_circles</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;ANVIL +15 minutes&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_anvil_nowcast_001.png" srcset="../_images/sphx_glr_anvil_nowcast_001.png" alt="Obs. 2015-05-15 16:20:00, mm/h, Obs. 2015-05-15 16:35:00, mm/h, Extrapolation +15 minutes, mm/h, S-PROG (with post-processing)  +15 minutes, mm/h, ANVIL +15 minutes, mm/h" class = "sphx-glr-single-img"/></section>
+<section id="remarks">
+<h2>Remarks<a class="headerlink" href="#remarks" title="Permalink to this headline"></a></h2>
+<p>The extrapolation nowcast is static, i.e. it does not predict any growth or
+decay. While S-PROG is to some extent able to predict growth and decay, this
+this comes with loss of small-scale features. In addition, statistical
+post-processing needs to be applied to correct the bias and incorrect wet-area
+ratio introduced by the autoregressive process. ANVIL is able to do both:
+predict growth and decay and preserve the small-scale structure in a way that
+post-processing is not necessary.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  16.124 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-anvil-nowcast-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/5770417d8ada6a3035ae99009a460173/anvil_nowcast.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">anvil_nowcast.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/1dac4fa1514be85c154040cd823fdb5b/anvil_nowcast.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">anvil_nowcast.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="LK_buffer_mask.html" class="btn btn-neutral float-left" title="Handling of no-data in Lucas-Kanade" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="optical_flow_methods_convergence.html" class="btn btn-neutral float-right" title="Optical flow methods convergence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

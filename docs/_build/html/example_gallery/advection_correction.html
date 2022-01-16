@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advection correction &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Precipitation downscaling with RainFARM" href="rainfarm_downscale.html" />
+    <link rel="prev" title="Optical flow" href="plot_optical_flow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advection correction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-radar-input-images">Read the radar input images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-the-data-from-the-archive">Load the data from the archive</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Advection correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results">Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Advection correction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/advection_correction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-advection-correction-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="advection-correction">
+<span id="sphx-glr-example-gallery-advection-correction-py"></span><h1>Advection correction<a class="headerlink" href="#advection-correction" title="Permalink to this headline"></a></h1>
+<p>This tutorial shows how to use the optical flow routines of pysteps to implement
+the advection correction procedure described in Anagnostou and Krajewski (1999).</p>
+<p>Advection correction is a temporal interpolation procedure that is often used
+when estimating rainfall accumulations to correct for the shift of rainfall patterns
+between consecutive radar rainfall maps. This shift becomes particularly
+significant for long radar scanning cycles and in presence of fast moving
+precipitation features.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The code for the advection correction using pysteps was originally
+written by <a class="reference external" href="https://github.com/wolfidan">Daniel Wolfensberger</a>.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">motion</span><span class="p">,</span> <span class="n">rcparams</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">dimension</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">map_coordinates</span>
+</pre></div>
+</div>
+<section id="read-the-radar-input-images">
+<h2>Read the radar input images<a class="headerlink" href="#read-the-radar-input-images" title="Permalink to this headline"></a></h2>
+<p>First, we import a sequence of 36 images of 5-minute radar composites
+that we will use to produce a 3-hour rainfall accumulation map.
+We will keep only one frame every 10 minutes, to simulate a longer scanning
+cycle and thus better highlight the need for advection correction.</p>
+<p>You need the pysteps-data archive downloaded and the pystepsrc file
+configured with the data_source paths pointing to data folders.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Selected case</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201607112100&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="load-the-data-from-the-archive">
+<h3>Load the data from the archive<a class="headerlink" href="#load-the-data-from-the-archive" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root_path</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">path_fmt</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">fn_pattern</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">fn_ext</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">]</span>
+
+<span class="c1"># Find the input files from the archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_next_files</span><span class="o">=</span><span class="mi">35</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the radar composites</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">__</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+
+<span class="c1"># Convert to mm/h</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Upscale to 2 km (simply to reduce the memory demand)</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">dimension</span><span class="o">.</span><span class="n">aggregate_fields_space</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+
+<span class="c1"># Keep only one frame every 10 minutes (i.e., every 2 timesteps)</span>
+<span class="c1"># (to highlight the need for advection correction)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id1">
+<h2>Advection correction<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<p>Now we need to implement the advection correction for a pair of successive
+radar images. The procedure is based on the algorithm described in Anagnostou
+and Krajewski (Appendix A, 1999).</p>
+<p>To evaluate the advection occurred between two successive radar images, we are
+going to use the Lucas-Kanade optical flow routine available in pysteps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">advection_correction</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    R = np.array([qpe_previous, qpe_current])</span>
+<span class="sd">    T = time between two observations (5 min)</span>
+<span class="sd">    t = interpolation timestep (1 min)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Evaluate advection</span>
+    <span class="n">oflow_method</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;LK&quot;</span><span class="p">)</span>
+    <span class="n">fd_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;buffer_mask&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>  <span class="c1"># avoid edge effects</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">oflow_method</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">R</span><span class="p">),</span> <span class="n">fd_kwargs</span><span class="o">=</span><span class="n">fd_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Perform temporal interpolation</span>
+    <span class="n">Rd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">T</span> <span class="o">+</span> <span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+        <span class="n">pos1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">i</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span> <span class="o">-</span> <span class="n">i</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">R1</span> <span class="o">=</span> <span class="n">map_coordinates</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">pos2</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">R2</span> <span class="o">=</span> <span class="n">map_coordinates</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pos2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">Rd</span> <span class="o">+=</span> <span class="p">(</span><span class="n">T</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">R1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">R2</span>
+
+    <span class="k">return</span> <span class="n">t</span> <span class="o">/</span> <span class="n">T</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Rd</span>
+</pre></div>
+</div>
+<p>Finally, we apply the advection correction to the whole sequence of radar
+images and produce the rainfall accumulation map.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R_ac</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">R_ac</span> <span class="o">+=</span> <span class="n">advection_correction</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)],</span> <span class="n">T</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">R_ac</span> <span class="o">/=</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline"></a></h2>
+<p>We compare the two accumulation maps. The first map on the left is
+computed without advection correction and we can therefore see that the shift
+between successive images 10 minutes apart produces irregular accumulations.
+Conversely, the rainfall accumulation of the right is produced using advection
+correction to account for this spatial shift. The final result is a smoother
+rainfall accumulation map.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;3-h rainfall accumulation&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">R_ac</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Same with advection correction&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_advection_correction_001.png" srcset="../_images/sphx_glr_advection_correction_001.png" alt="3-h rainfall accumulation, mm/h, Same with advection correction, mm/h" class = "sphx-glr-single-img"/><section id="reference">
+<h3>Reference<a class="headerlink" href="#reference" title="Permalink to this headline"></a></h3>
+<p>Anagnostou, E. N., and W. F. Krajewski. 1999. “Real-Time Radar Rainfall
+Estimation. Part I: Algorithm Formulation.” Journal of Atmospheric and
+Oceanic Technology 16: 189–97.
+<a class="reference external" href="https://doi.org/10.1175/1520-0426(1999">https://doi.org/10.1175/1520-0426(1999</a>)016&lt;0189:RTRREP&gt;2.0.CO;2</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.599 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-advection-correction-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/2ed4b8bcc384df64636cebd2e6c4c524/advection_correction.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">advection_correction.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/28f779b9eebe94b956a164587af1cd3c/advection_correction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">advection_correction.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plot_optical_flow.html" class="btn btn-neutral float-left" title="Optical flow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rainfarm_downscale.html" class="btn btn-neutral float-right" title="Precipitation downscaling with RainFARM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

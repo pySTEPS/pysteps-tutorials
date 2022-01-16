@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data transformations &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Cascade decomposition" href="plot_cascade_decomposition.html" />
+    <link rel="prev" title="Thunderstorm Detection and Tracking - T-DaTing" href="thunderstorm_detection_and_tracking.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data transformations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-radar-input-images">Read the radar input images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-the-data-from-the-archive">Load the data from the archive</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#test-data-transformations">Test data transformations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#box-cox-transform">Box-Cox transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compare-data-transformations">Compare data transformations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rain-rates">Rain rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#db-transform">dB transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#square-root-transform">Square-root transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Box-Cox transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#normal-quantile-transform">Normal quantile transform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Data transformations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/data_transformations.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-data-transformations-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="data-transformations">
+<span id="sphx-glr-example-gallery-data-transformations-py"></span><h1>Data transformations<a class="headerlink" href="#data-transformations" title="Permalink to this headline"></a></h1>
+<p>The statistics of intermittent precipitation rates are particularly non-Gaussian
+and display an asymmetric distribution bounded at zero.
+Such properties restrict the usage of well-established statistical methods that
+assume symmetric or Gaussian data.</p>
+<p>A common workaround is to introduce a suitable data transformation to approximate
+a normal distribution.</p>
+<p>In this example, we test the data transformation methods available in pysteps
+in order to obtain a more symmetric distribution of the precipitation data
+(excluding the zeros).
+The currently available transformations include the Box-Cox, dB, square-root and
+normal quantile transforms.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">transformation</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">skew</span>
+</pre></div>
+</div>
+<section id="read-the-radar-input-images">
+<h2>Read the radar input images<a class="headerlink" href="#read-the-radar-input-images" title="Permalink to this headline"></a></h2>
+<p>First, we will import the sequence of radar composites.
+You need the pysteps-data archive downloaded and the pystepsrc file
+configured with the data_source paths pointing to data folders.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Selected case</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201609281600&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;fmi&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="load-the-data-from-the-archive">
+<h3>Load the data from the archive<a class="headerlink" href="#load-the-data-from-the-archive" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root_path</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">path_fmt</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">fn_pattern</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">fn_ext</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">]</span>
+
+<span class="c1"># Get 1 hour of observations in the data archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">num_next_files</span><span class="o">=</span><span class="mi">11</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the radar composites</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">Z</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+
+<span class="c1"># Keep only positive rainfall values</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">Z</span> <span class="o">&gt;</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;zerovalue&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="c1"># Convert to rain rate</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-data-transformations">
+<h2>Test data transformations<a class="headerlink" href="#test-data-transformations" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define method to visualize the data distribution with boxplots and plot the</span>
+<span class="c1"># corresponding skewness</span>
+<span class="k">def</span> <span class="nf">plot_distribution</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">skw</span><span class="p">):</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;:r&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">sym</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">medianprops</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;k&quot;</span><span class="p">})</span>
+
+    <span class="n">ymax</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">skw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;*r&quot;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+        <span class="n">ymax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="c1"># ylims</span>
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ymax</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ylims</span><span class="p">,</span> <span class="n">ylims</span><span class="p">))</span>
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">skw</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.1</span> <span class="o">*</span> <span class="n">ylims</span><span class="p">,</span> <span class="mf">1.1</span> <span class="o">*</span> <span class="n">ylims</span><span class="p">))</span>
+
+    <span class="c1"># labels</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Standardized values [$\sigma$]&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Skewness []&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="box-cox-transform">
+<h3>Box-Cox transform<a class="headerlink" href="#box-cox-transform" title="Permalink to this headline"></a></h3>
+<p>The Box-Cox transform is a well-known power transformation introduced by
+<a class="reference external" href="https://doi.org/10.1111/j.2517-6161.1964.tb00553.x">Box and Cox (1964)</a>. In its one-parameter version, the Box-Cox transform
+takes the form T(x) = ln(x) for lambda = 0, or T(x) = (x**lambda - 1)/lambda
+otherwise.</p>
+<p>To find a suitable lambda, we will experiment with a range of values
+and select the one that produces the most symmetric distribution, i.e., the
+lambda associated with a value of skewness closest to zero.
+To visually compare the results, the transformed data are standardized.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">skw</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Test a range of values for the transformation parameter Lambda</span>
+<span class="n">Lambdas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Lambda</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Lambdas</span><span class="p">):</span>
+    <span class="n">R_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">boxcox_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">Lambda</span><span class="p">)</span>
+    <span class="n">R_</span> <span class="o">=</span> <span class="p">(</span><span class="n">R_</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">R_</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R_</span><span class="p">)</span>
+    <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Lambda</span><span class="p">))</span>
+    <span class="n">skw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>  <span class="c1"># skewness</span>
+
+<span class="c1"># Plot the transformed data distribution as a function of lambda</span>
+<span class="n">plot_distribution</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">skw</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Box-Cox transform&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Best lambda</span>
+<span class="n">idx_best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">skw</span><span class="p">))</span>
+<span class="n">Lambda</span> <span class="o">=</span> <span class="n">Lambdas</span><span class="p">[</span><span class="n">idx_best</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best parameter lambda: </span><span class="si">%.2f</span><span class="se">\n</span><span class="s2">(skewness = </span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Lambda</span><span class="p">,</span> <span class="n">skw</span><span class="p">[</span><span class="n">idx_best</span><span class="p">]))</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_data_transformations_001.png" srcset="../_images/sphx_glr_data_transformations_001.png" alt="Box-Cox transform" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Best parameter lambda: 0.16
+(skewness = 0.02)
+</pre></div>
+</div>
+</section>
+<section id="compare-data-transformations">
+<h3>Compare data transformations<a class="headerlink" href="#compare-data-transformations" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">skw</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</section>
+<section id="rain-rates">
+<h3>Rain rates<a class="headerlink" href="#rain-rates" title="Permalink to this headline"></a></h3>
+<p>First, let’s have a look at the original rain rate values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">R</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
+<span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">)</span>
+<span class="n">skw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="db-transform">
+<h3>dB transform<a class="headerlink" href="#db-transform" title="Permalink to this headline"></a></h3>
+<p>We transform the rainfall data into dB units: 10*log(R)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">R_</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+<span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;dB&quot;</span><span class="p">)</span>
+<span class="n">skw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="square-root-transform">
+<h3>Square-root transform<a class="headerlink" href="#square-root-transform" title="Permalink to this headline"></a></h3>
+<p>Transform the data using the square-root: sqrt(R)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">sqrt_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">R_</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+<span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;sqrt&quot;</span><span class="p">)</span>
+<span class="n">skw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3>Box-Cox transform<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<p>We now apply the Box-Cox transform using the best parameter lambda found above.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">boxcox_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">Lambda</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">R_</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+<span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Box-Cox</span><span class="se">\n</span><span class="s2">($\lambda=$</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">Lambda</span><span class="p">)</span>
+<span class="n">skw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="normal-quantile-transform">
+<h3>Normal quantile transform<a class="headerlink" href="#normal-quantile-transform" title="Permalink to this headline"></a></h3>
+<p>At last, we apply the empirical normal quantile (NQ) transform as described in
+<a class="reference external" href="http://dx.doi.org/10.5194/hess-16-1085-2012">Bogner et al (2012)</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">NQ_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">R_</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+<span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NQ&quot;</span><span class="p">)</span>
+<span class="n">skw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skew</span><span class="p">(</span><span class="n">R_</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>By plotting all the results, we can notice first of all the strongly asymmetric
+distribution of the original data (R) and that all transformations manage to
+reduce its skewness. Among these, the Box-Cox transform (using the best parameter
+lambda) and the normal quantile (NQ) transform provide the best correction.
+Despite not producing a perfectly symmetric distribution, the square-root (sqrt)
+transform has the strong advantage of being defined for zeros, too, while all
+other transformations need an arbitrary rule for non-positive values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot_distribution</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">skw</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Data transforms&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_data_transformations_002.png" srcset="../_images/sphx_glr_data_transformations_002.png" alt="Data transforms" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.676 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-data-transformations-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d73076743508a0ca05422c2326bfcfc3/data_transformations.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">data_transformations.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/4bfe76bbd80c325d5c8d9306f285acd4/data_transformations.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">data_transformations.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="thunderstorm_detection_and_tracking.html" class="btn btn-neutral float-left" title="Thunderstorm Detection and Tracking - T-DaTing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_cascade_decomposition.html" class="btn btn-neutral float-right" title="Cascade decomposition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

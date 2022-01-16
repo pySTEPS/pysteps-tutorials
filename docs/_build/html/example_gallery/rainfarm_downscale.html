@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precipitation downscaling with RainFARM &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Probability forecasts" href="probability_forecast.html" />
+    <link rel="prev" title="Advection correction" href="advection_correction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Precipitation downscaling with RainFARM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-input-data">Read the input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#upscale-the-field">Upscale the field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#downscale-the-field">Downscale the field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remarks">Remarks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Precipitation downscaling with RainFARM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/rainfarm_downscale.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-rainfarm-downscale-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="precipitation-downscaling-with-rainfarm">
+<span id="sphx-glr-example-gallery-rainfarm-downscale-py"></span><h1>Precipitation downscaling with RainFARM<a class="headerlink" href="#precipitation-downscaling-with-rainfarm" title="Permalink to this headline"></a></h1>
+<p>This example script shows how to use the stochastic downscaling method RainFARM
+available in pysteps.</p>
+<p>RainFARM is a downscaling algorithm for rainfall fields developed by Rebora et
+al. (2006). The method can represent the realistic small-scale variability of the
+downscaled precipitation field by means of Gaussian random fields.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">aggregate_fields_space</span><span class="p">,</span> <span class="n">square_domain</span><span class="p">,</span> <span class="n">to_rainrate</span>
+<span class="kn">from</span> <span class="nn">pysteps.downscaling</span> <span class="kn">import</span> <span class="n">rainfarm</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span>
+</pre></div>
+</div>
+<section id="read-the-input-data">
+<h2>Read the input data<a class="headerlink" href="#read-the-input-data" title="Permalink to this headline"></a></h2>
+<p>As first step, we need to import the precipitation field that we are going
+to use in this example.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the example radar composite</span>
+<span class="n">root_path</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_path</span><span class="p">,</span> <span class="s2">&quot;20160711&quot;</span><span class="p">,</span> <span class="s2">&quot;AQC161932100V_00005.801.gif&quot;</span><span class="p">)</span>
+<span class="n">precip</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">import_mch_gif</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="s2">&quot;AQC&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">,</span> <span class="n">accutime</span><span class="o">=</span><span class="mf">5.0</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert to mm/h</span>
+<span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">to_rainrate</span><span class="p">(</span><span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Reduce to a square domain</span>
+<span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">square_domain</span><span class="p">(</span><span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s2">&quot;crop&quot;</span><span class="p">)</span>
+
+<span class="c1"># Nicely print the metadata</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Plot the original rainfall field</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">precip</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Assign the fill value to all the Nans</span>
+<span class="n">precip</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">precip</span><span class="p">)]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;zerovalue&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_rainfarm_downscale_001.png" srcset="../_images/sphx_glr_rainfarm_downscale_001.png" alt="mm/h" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;accutime&#39;: 5.0,
+ &#39;cartesian_unit&#39;: &#39;m&#39;,
+ &#39;institution&#39;: &#39;MeteoSwiss&#39;,
+ &#39;orig_domain&#39;: (640, 710),
+ &#39;product&#39;: &#39;AQC&#39;,
+ &#39;projection&#39;: &#39;+proj=somerc  +lon_0=7.43958333333333 +lat_0=46.9524055555556 &#39;
+               &#39;+k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel &#39;
+               &#39;+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs&#39;,
+ &#39;square_method&#39;: &#39;crop&#39;,
+ &#39;threshold&#39;: 0.01155375598376629,
+ &#39;transform&#39;: None,
+ &#39;unit&#39;: &#39;mm/h&#39;,
+ &#39;x1&#39;: 290000.0,
+ &#39;x2&#39;: 930000.0,
+ &#39;xpixelsize&#39;: 1000.0,
+ &#39;y1&#39;: -160000.0,
+ &#39;y2&#39;: 480000.0,
+ &#39;yorigin&#39;: &#39;upper&#39;,
+ &#39;ypixelsize&#39;: 1000.0,
+ &#39;zerovalue&#39;: 0.0,
+ &#39;zr_a&#39;: 316.0,
+ &#39;zr_b&#39;: 1.5}
+</pre></div>
+</div>
+</section>
+<section id="upscale-the-field">
+<h2>Upscale the field<a class="headerlink" href="#upscale-the-field" title="Permalink to this headline"></a></h2>
+<p>To test our downscaling method, we first need to upscale the original field to
+a lower resolution. We are going to use an upscaling factor of 16 x.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">upscaling_factor</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">upscale_to</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;xpixelsize&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">upscaling_factor</span>  <span class="c1"># upscaling factor : 16 x</span>
+<span class="n">precip_lr</span><span class="p">,</span> <span class="n">metadata_lr</span> <span class="o">=</span> <span class="n">aggregate_fields_space</span><span class="p">(</span><span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">upscale_to</span><span class="p">)</span>
+
+<span class="c1"># Plot the upscaled rainfall field</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">precip_lr</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata_lr</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_rainfarm_downscale_002.png" srcset="../_images/sphx_glr_rainfarm_downscale_002.png" alt="mm/h" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;GeoAxesSubplot:&gt;
+</pre></div>
+</div>
+</section>
+<section id="downscale-the-field">
+<h2>Downscale the field<a class="headerlink" href="#downscale-the-field" title="Permalink to this headline"></a></h2>
+<p>We can now use RainFARM to generate stochastic realizations of the downscaled
+precipitation field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="c1"># Set the number of stochastic realizations</span>
+<span class="n">num_realizations</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># Per realization, generate a stochastically downscaled precipitation field</span>
+<span class="c1"># and plot it.</span>
+<span class="c1"># The first time, the spectral slope alpha needs to be estimated. To illustrate</span>
+<span class="c1"># the sensitity of this parameter, we are going to plot some realizations with</span>
+<span class="c1"># half or double the estimated slope.</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_realizations</span><span class="p">):</span>
+
+    <span class="c1"># Spectral slope estimated from the upscaled field</span>
+    <span class="n">precip_hr</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">rainfarm</span><span class="o">.</span><span class="n">downscale</span><span class="p">(</span>
+        <span class="n">precip_lr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">ds_factor</span><span class="o">=</span><span class="n">upscaling_factor</span><span class="p">,</span> <span class="n">return_alpha</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_realizations</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">plot_precip_field</span><span class="p">(</span><span class="n">precip_hr</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Half the estimated slope</span>
+    <span class="n">precip_hr</span> <span class="o">=</span> <span class="n">rainfarm</span><span class="o">.</span><span class="n">downscale</span><span class="p">(</span>
+        <span class="n">precip_lr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">ds_factor</span><span class="o">=</span><span class="n">upscaling_factor</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_realizations</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plot_precip_field</span><span class="p">(</span><span class="n">precip_hr</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha=</span><span class="si">{</span><span class="n">alpha</span> <span class="o">*</span> <span class="mf">0.5</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Double the estimated slope</span>
+    <span class="n">precip_hr</span> <span class="o">=</span> <span class="n">rainfarm</span><span class="o">.</span><span class="n">downscale</span><span class="p">(</span>
+        <span class="n">precip_lr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ds_factor</span><span class="o">=</span><span class="n">upscaling_factor</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_realizations</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">plot_precip_field</span><span class="p">(</span><span class="n">precip_hr</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha=</span><span class="si">{</span><span class="n">alpha</span> <span class="o">*</span> <span class="mi">2</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_rainfarm_downscale_003.png" srcset="../_images/sphx_glr_rainfarm_downscale_003.png" alt="alpha=1.5, alpha=0.8, alpha=3.1" class = "sphx-glr-single-img"/></section>
+<section id="remarks">
+<h2>Remarks<a class="headerlink" href="#remarks" title="Permalink to this headline"></a></h2>
+<p>Currently, the pysteps implementation of RainFARM only covers spatial downscaling.
+That is, it can improve the spatial resolution of a rainfall field. However, unlike
+the original algorithm from Rebora et al. (2006), it cannot downscale the temporal
+dimension.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
+<p>Rebora, N., L. Ferraris, J. von Hardenberg, and A. Provenzale, 2006: RainFARM:
+Rainfall downscaling by a filtered autoregressive model. J. Hydrometeor., 7,
+724–738.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  13.639 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-rainfarm-downscale-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ca677ff2ad9eec40d4623018504cf568/rainfarm_downscale.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">rainfarm_downscale.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/cac103a569bf9fd5a4910f68e9e5429a/rainfarm_downscale.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">rainfarm_downscale.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="advection_correction.html" class="btn btn-neutral float-left" title="Advection correction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="probability_forecast.html" class="btn btn-neutral float-right" title="Probability forecasts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

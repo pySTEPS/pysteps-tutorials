@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extrapolation nowcast &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generation of stochastic noise" href="plot_noise_generators.html" />
+    <link rel="prev" title="Probability forecasts" href="probability_forecast.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extrapolation nowcast</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-radar-input-images">Read the radar input images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-the-data-from-the-archive">Load the data from the archive</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#compute-the-nowcast">Compute the nowcast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify-with-fss">Verify with FSS</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Extrapolation nowcast</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/plot_extrapolation_nowcast.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-plot-extrapolation-nowcast-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="extrapolation-nowcast">
+<span id="sphx-glr-example-gallery-plot-extrapolation-nowcast-py"></span><h1>Extrapolation nowcast<a class="headerlink" href="#extrapolation-nowcast" title="Permalink to this headline"></a></h1>
+<p>This tutorial shows how to compute and plot an extrapolation nowcast using
+Finnish radar data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">motion</span><span class="p">,</span> <span class="n">nowcasts</span><span class="p">,</span> <span class="n">rcparams</span><span class="p">,</span> <span class="n">verification</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">transformation</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span><span class="p">,</span> <span class="n">quiver</span>
+</pre></div>
+</div>
+<section id="read-the-radar-input-images">
+<h2>Read the radar input images<a class="headerlink" href="#read-the-radar-input-images" title="Permalink to this headline"></a></h2>
+<p>First, we will import the sequence of radar composites.
+You need the pysteps-data archive downloaded and the pystepsrc file
+configured with the data_source paths pointing to data folders.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Selected case</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201609281600&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;fmi&quot;</span><span class="p">]</span>
+<span class="n">n_leadtimes</span> <span class="o">=</span> <span class="mi">12</span>
+</pre></div>
+</div>
+<section id="load-the-data-from-the-archive">
+<h3>Load the data from the archive<a class="headerlink" href="#load-the-data-from-the-archive" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root_path</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">path_fmt</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">fn_pattern</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">fn_ext</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">]</span>
+
+<span class="c1"># Find the input files from the archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">num_prev_files</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the radar composites</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">Z</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+
+<span class="c1"># Convert to rain rate</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Plot the rainfall field</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Store the last frame for plotting it later later</span>
+<span class="n">R_</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Log-transform the data to unit of dBR, set the threshold to 0.1 mm/h,</span>
+<span class="c1"># set the fill value to -15 dBR</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zerovalue</span><span class="o">=-</span><span class="mf">15.0</span><span class="p">)</span>
+
+<span class="c1"># Nicely print the metadata</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_extrapolation_nowcast_001.png" srcset="../_images/sphx_glr_plot_extrapolation_nowcast_001.png" alt="mm/h" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;accutime&#39;: 5.0,
+ &#39;cartesian_unit&#39;: &#39;m&#39;,
+ &#39;institution&#39;: &#39;Finnish Meteorological Institute&#39;,
+ &#39;projection&#39;: &#39;+proj=stere  +lon_0=25E +lat_0=90N +lat_ts=60 +a=6371288 &#39;
+               &#39;+x_0=380886.310 +y_0=3395677.920 +no_defs&#39;,
+ &#39;threshold&#39;: -10.0,
+ &#39;timestamps&#39;: array([datetime.datetime(2016, 9, 28, 15, 50),
+       datetime.datetime(2016, 9, 28, 15, 55),
+       datetime.datetime(2016, 9, 28, 16, 0)], dtype=object),
+ &#39;transform&#39;: &#39;dB&#39;,
+ &#39;unit&#39;: &#39;mm/h&#39;,
+ &#39;x1&#39;: 0.0049823258887045085,
+ &#39;x2&#39;: 759752.2852757066,
+ &#39;xpixelsize&#39;: 999.674053,
+ &#39;y1&#39;: 0.009731985162943602,
+ &#39;y2&#39;: 1225544.6588913496,
+ &#39;yorigin&#39;: &#39;upper&#39;,
+ &#39;ypixelsize&#39;: 999.62859,
+ &#39;zerovalue&#39;: -15.0,
+ &#39;zr_a&#39;: 223.0,
+ &#39;zr_b&#39;: 1.53}
+</pre></div>
+</div>
+</section>
+</section>
+<section id="compute-the-nowcast">
+<h2>Compute the nowcast<a class="headerlink" href="#compute-the-nowcast" title="Permalink to this headline"></a></h2>
+<p>The extrapolation nowcast is based on the estimation of the motion field,
+which is here performed using a local tracking approach (Lucas-Kanade).
+The most recent radar rainfall field is then simply advected along this motion
+field in oder to produce an extrapolation forecast.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estimate the motion field with Lucas-Kanade</span>
+<span class="n">oflow_method</span> <span class="o">=</span> <span class="n">motion</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;LK&quot;</span><span class="p">)</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">oflow_method</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:])</span>
+
+<span class="c1"># Extrapolate the last radar observation</span>
+<span class="n">extrapolate</span> <span class="o">=</span> <span class="n">nowcasts</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;extrapolation&quot;</span><span class="p">)</span>
+<span class="n">R</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">R</span><span class="p">)]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;zerovalue&quot;</span><span class="p">]</span>
+<span class="n">R_f</span> <span class="o">=</span> <span class="n">extrapolate</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">V</span><span class="p">,</span> <span class="n">n_leadtimes</span><span class="p">)</span>
+
+<span class="c1"># Back-transform to rain rate</span>
+<span class="n">R_f</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span><span class="n">R_f</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Plot the motion field</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">R_</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">quiver</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_extrapolation_nowcast_002.png" srcset="../_images/sphx_glr_plot_extrapolation_nowcast_002.png" alt="mm/h" class = "sphx-glr-single-img"/></section>
+<section id="verify-with-fss">
+<h2>Verify with FSS<a class="headerlink" href="#verify-with-fss" title="Permalink to this headline"></a></h2>
+<p>The fractions skill score (FSS) provides an intuitive assessment of the
+dependency of skill on spatial scale and intensity, which makes it an ideal
+skill score for high-resolution precipitation forecasts.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find observations in the data archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span>
+    <span class="n">root_path</span><span class="p">,</span>
+    <span class="n">path_fmt</span><span class="p">,</span>
+    <span class="n">fn_pattern</span><span class="p">,</span>
+    <span class="n">fn_ext</span><span class="p">,</span>
+    <span class="n">timestep</span><span class="p">,</span>
+    <span class="n">num_prev_files</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">num_next_files</span><span class="o">=</span><span class="n">n_leadtimes</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># Read the radar composites</span>
+<span class="n">R_o</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata_o</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+<span class="n">R_o</span><span class="p">,</span> <span class="n">metadata_o</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">R_o</span><span class="p">,</span> <span class="n">metadata_o</span><span class="p">,</span> <span class="mf">223.0</span><span class="p">,</span> <span class="mf">1.53</span><span class="p">)</span>
+
+<span class="c1"># Compute fractions skill score (FSS) for all lead times, a set of scales and 1 mm/h</span>
+<span class="n">fss</span> <span class="o">=</span> <span class="n">verification</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="s2">&quot;FSS&quot;</span><span class="p">)</span>
+<span class="n">scales</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">]</span>
+<span class="n">thr</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">score</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_leadtimes</span><span class="p">):</span>
+    <span class="n">score_</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="p">:</span>
+        <span class="n">score_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fss</span><span class="p">(</span><span class="n">R_f</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">R_o</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">thr</span><span class="p">,</span> <span class="n">scale</span><span class="p">))</span>
+    <span class="n">score</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score_</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_leadtimes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">timestep</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">scales</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Scale [km]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lead time [min]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;FSS ( &gt; 1.0 mm/h ) &quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Fractions skill score&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 3</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_extrapolation_nowcast_003.png" srcset="../_images/sphx_glr_plot_extrapolation_nowcast_003.png" alt="Fractions skill score" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  23.966 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-plot-extrapolation-nowcast-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/7437e12ad9555523676a6740d73de74a/plot_extrapolation_nowcast.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_extrapolation_nowcast.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/2fd83809f4a0a76d6f21b9444f1ee352/plot_extrapolation_nowcast.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_extrapolation_nowcast.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="probability_forecast.html" class="btn btn-neutral float-left" title="Probability forecasts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_noise_generators.html" class="btn btn-neutral float-right" title="Generation of stochastic noise" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

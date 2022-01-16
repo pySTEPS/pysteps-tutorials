@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thunderstorm Detection and Tracking - T-DaTing &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data transformations" href="data_transformations.html" />
+    <link rel="prev" title="Generation of stochastic noise" href="plot_noise_generators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Thunderstorm Detection and Tracking - T-DaTing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-all-required-functions">Import all required functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-the-radar-input-images">Read the radar input images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-of-thunderstorm-identification-in-a-single-timestep">Example of thunderstorm identification in a single timestep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-of-thunderstorm-tracking-over-a-timeseries">Example of thunderstorm tracking over a timeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting-the-results">Plotting the results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluating-temporal-behaviour-of-cell">Evaluating temporal behaviour of cell</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Thunderstorm Detection and Tracking - T-DaTing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/thunderstorm_detection_and_tracking.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-thunderstorm-detection-and-tracking-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="thunderstorm-detection-and-tracking-t-dating">
+<span id="sphx-glr-example-gallery-thunderstorm-detection-and-tracking-py"></span><h1>Thunderstorm Detection and Tracking - T-DaTing<a class="headerlink" href="#thunderstorm-detection-and-tracking-t-dating" title="Permalink to this headline"></a></h1>
+<p>This example shows how to use the thunderstorm DaTing module. The example is based on
+MeteoSwiss radar data and uses the Cartesian composite of maximum reflectivity on a
+1 km grid. All default values are tuned to this grid, but can be modified.
+The first section demonstrates thunderstorm cell detection and how to plot contours.
+The second section demonstrates detection and tracking in combination,
+as well as how to plot the resulting tracks.
+This module was implemented following the procedures used in the TRT Thunderstorms
+Radar Tracking algorithm (<a href="#id1"><span class="problematic" id="id2">:cite:`TRT2004`</span></a>) used operationally at MeteoSwiss.
+Modifications include advecting the identified thunderstorms with the optical flow
+obtained from pysteps, as well as additional options in the thresholding. A detailed
+description is published in Appendix A of <a href="#id3"><span class="problematic" id="id4">:cite:`Feldmann2021`</span></a>.</p>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
+<p><a href="#id5"><span class="problematic" id="id6">:cite:`TRT2004`</span></a>
+<a href="#id7"><span class="problematic" id="id8">:cite:`Feldmann2021`</span></a></p>
+<p>&#64;author: feldmann-m</p>
+<section id="import-all-required-functions">
+<h3>Import all required functions<a class="headerlink" href="#import-all-required-functions" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span>
+<span class="kn">from</span> <span class="nn">pysteps.feature</span> <span class="kn">import</span> <span class="n">tstorm</span> <span class="k">as</span> <span class="n">tstorm_detect</span>
+<span class="kn">from</span> <span class="nn">pysteps.tracking</span> <span class="kn">import</span> <span class="n">tdating</span> <span class="k">as</span> <span class="n">tstorm_dating</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">to_reflectivity</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span><span class="p">,</span> <span class="n">plot_track</span><span class="p">,</span> <span class="n">plot_cart_contour</span>
+</pre></div>
+</div>
+</section>
+<section id="read-the-radar-input-images">
+<h3>Read the radar input images<a class="headerlink" href="#read-the-radar-input-images" title="Permalink to this headline"></a></h3>
+<p>A series of 20 files containing Swiss Cartesian gridded rain rates are imported. Since
+the algorithm is tuned to Swiss max-reflectivity data, the rain rates are transformed
+to reflectivity fields using the ‘to_reflectivity’ utility in pysteps.utils.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select the input data</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201607112100&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">]</span>
+
+<span class="c1"># Extract corresponding settings</span>
+<span class="n">root_path</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">path_fmt</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">fn_pattern</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">fn_ext</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="n">data_source</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">]</span>
+
+<span class="c1"># Load the data from the archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">path_fmt</span><span class="p">,</span> <span class="n">fn_pattern</span><span class="p">,</span> <span class="n">fn_ext</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">num_next_files</span><span class="o">=</span><span class="mi">20</span>
+<span class="p">)</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+
+<span class="c1"># Convert to reflectivity (it is possible to give the a- and b- parameters of the</span>
+<span class="c1"># Marshall-Palmer relationship here: zr_a = and zr_b =).</span>
+<span class="n">Z</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">to_reflectivity</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Extract the list of timestamps</span>
+<span class="n">timelist</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;timestamps&quot;</span><span class="p">]</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;accutime&#39;: 5,
+ &#39;cartesian_unit&#39;: &#39;m&#39;,
+ &#39;institution&#39;: &#39;MeteoSwiss&#39;,
+ &#39;product&#39;: &#39;AQC&#39;,
+ &#39;projection&#39;: &#39;+proj=somerc  +lon_0=7.43958333333333 +lat_0=46.9524055555556 &#39;
+               &#39;+k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel &#39;
+               &#39;+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs&#39;,
+ &#39;threshold&#39;: -4.062281309285625,
+ &#39;timestamps&#39;: array([datetime.datetime(2016, 7, 11, 21, 0),
+       datetime.datetime(2016, 7, 11, 21, 5),
+       datetime.datetime(2016, 7, 11, 21, 10),
+       datetime.datetime(2016, 7, 11, 21, 15),
+       datetime.datetime(2016, 7, 11, 21, 20),
+       datetime.datetime(2016, 7, 11, 21, 25),
+       datetime.datetime(2016, 7, 11, 21, 30),
+       datetime.datetime(2016, 7, 11, 21, 35),
+       datetime.datetime(2016, 7, 11, 21, 40),
+       datetime.datetime(2016, 7, 11, 21, 45),
+       datetime.datetime(2016, 7, 11, 21, 50),
+       datetime.datetime(2016, 7, 11, 21, 55),
+       datetime.datetime(2016, 7, 11, 22, 0),
+       datetime.datetime(2016, 7, 11, 22, 5),
+       datetime.datetime(2016, 7, 11, 22, 10),
+       datetime.datetime(2016, 7, 11, 22, 15),
+       datetime.datetime(2016, 7, 11, 22, 20),
+       datetime.datetime(2016, 7, 11, 22, 25),
+       datetime.datetime(2016, 7, 11, 22, 30),
+       datetime.datetime(2016, 7, 11, 22, 35),
+       datetime.datetime(2016, 7, 11, 22, 40)], dtype=object),
+ &#39;transform&#39;: &#39;dB&#39;,
+ &#39;unit&#39;: &#39;dBZ&#39;,
+ &#39;x1&#39;: 255000.0,
+ &#39;x2&#39;: 965000.0,
+ &#39;xpixelsize&#39;: 1000.0,
+ &#39;y1&#39;: -160000.0,
+ &#39;y2&#39;: 480000.0,
+ &#39;yorigin&#39;: &#39;upper&#39;,
+ &#39;ypixelsize&#39;: 1000.0,
+ &#39;zerovalue&#39;: -9.062281309285625,
+ &#39;zr_a&#39;: 316.0,
+ &#39;zr_b&#39;: 1.5}
+</pre></div>
+</div>
+</section>
+<section id="example-of-thunderstorm-identification-in-a-single-timestep">
+<h3>Example of thunderstorm identification in a single timestep<a class="headerlink" href="#example-of-thunderstorm-identification-in-a-single-timestep" title="Permalink to this headline"></a></h3>
+<p>The function tstorm_detect.detection requires a 2-D input image, all further inputs are
+optional.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_image</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">cells_id</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">tstorm_detect</span><span class="o">.</span><span class="n">detection</span><span class="p">(</span><span class="n">input_image</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Properties of one of the identified cells:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">cells_id</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ID                                                         1
+time                                     2016-07-11 21:10:00
+x          [464, 465, 466, 467, 468, 469, 470, 471, 472, ...
+y          [115, 115, 115, 115, 115, 115, 115, 115, 115, ...
+cen_x                                                    463
+cen_y                                                    119
+max_ref                                            47.437719
+cont       [[[128.2, 448.0], [128.0, 447.8], [127.2, 447....
+area                                                     176
+Name: 0, dtype: object
+</pre></div>
+</div>
+</section>
+<section id="example-of-thunderstorm-tracking-over-a-timeseries">
+<h3>Example of thunderstorm tracking over a timeseries<a class="headerlink" href="#example-of-thunderstorm-tracking-over-a-timeseries" title="Permalink to this headline"></a></h3>
+<p>The tstorm-dating function requires the entire pre-loaded time series.
+The first two timesteps are required to initialize the
+flow prediction and are not used to compute tracks.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">track_list</span><span class="p">,</span> <span class="n">cell_list</span><span class="p">,</span> <span class="n">label_list</span> <span class="o">=</span> <span class="n">tstorm_dating</span><span class="o">.</span><span class="n">dating</span><span class="p">(</span>
+    <span class="n">input_video</span><span class="o">=</span><span class="n">Z</span><span class="p">,</span> <span class="n">timelist</span><span class="o">=</span><span class="n">timelist</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-the-results">
+<h3>Plotting the results<a class="headerlink" href="#plotting-the-results" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot precipitation field</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;unit&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Swiss easting [m]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Swiss northing [m]&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add the identified cells</span>
+<span class="n">plot_cart_contour</span><span class="p">(</span><span class="n">cells_id</span><span class="o">.</span><span class="n">cont</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Filter the tracks to only contain cells existing in this timestep</span>
+<span class="n">IDs</span> <span class="o">=</span> <span class="n">cells_id</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">values</span>
+<span class="n">track_filt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">track_list</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IDs</span><span class="p">:</span>
+        <span class="n">track_filt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
+
+<span class="c1"># Add their tracks</span>
+<span class="n">plot_track</span><span class="p">(</span><span class="n">track_filt</span><span class="p">,</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_thunderstorm_detection_and_tracking_001.png" srcset="../_images/sphx_glr_thunderstorm_detection_and_tracking_001.png" alt="dBZ" class = "sphx-glr-single-img"/></section>
+<section id="evaluating-temporal-behaviour-of-cell">
+<h3>Evaluating temporal behaviour of cell<a class="headerlink" href="#evaluating-temporal-behaviour-of-cell" title="Permalink to this headline"></a></h3>
+<p>Maximum reflectivity of cells in time</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make an empty list</span>
+<span class="n">tlen</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Get a list of colors that we will use for the plot</span>
+<span class="n">color</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ocean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">track_filt</span><span class="p">))))</span>
+<span class="c1"># Now, loop through all the tracks and plot the maximum reflectivity of the cell</span>
+<span class="c1"># in time.</span>
+<span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">track_filt</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">)),</span> <span class="n">track</span><span class="o">.</span><span class="n">max_ref</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
+    <span class="n">tlen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">tlen</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">tlen</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Maximum reflectivity (dBZ)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time since cell detection (min)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">IDs</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Track number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_thunderstorm_detection_and_tracking_002.png" srcset="../_images/sphx_glr_thunderstorm_detection_and_tracking_002.png" alt="thunderstorm detection and tracking" class = "sphx-glr-single-img"/><p>The size of the thunderstorm cells in time</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make an empty list</span>
+<span class="n">tlen</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Get a list of colors that we will use for the plot</span>
+<span class="n">color</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ocean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">track_filt</span><span class="p">))))</span>
+<span class="c1"># Now, loop through all the tracks and plot the cell size of the thunderstorms</span>
+<span class="c1"># in time.</span>
+<span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">track_filt</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ID</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">track</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">size</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">)),</span> <span class="n">size</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
+    <span class="n">tlen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">tlen</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">tlen</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Thunderstorm cell size (pixels)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time since cell detection (min)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">IDs</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Track number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_thunderstorm_detection_and_tracking_003.png" srcset="../_images/sphx_glr_thunderstorm_detection_and_tracking_003.png" alt="thunderstorm detection and tracking" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  54.233 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-thunderstorm-detection-and-tracking-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/900d21386997f01ec70cfb7bf72937bf/thunderstorm_detection_and_tracking.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">thunderstorm_detection_and_tracking.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/e7d1314f247aec3dd474c53f278e27a6/thunderstorm_detection_and_tracking.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">thunderstorm_detection_and_tracking.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plot_noise_generators.html" class="btn btn-neutral float-left" title="Generation of stochastic noise" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_transformations.html" class="btn btn-neutral float-right" title="Data transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

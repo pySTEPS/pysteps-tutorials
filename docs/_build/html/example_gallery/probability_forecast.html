@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Probability forecasts &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Extrapolation nowcast" href="plot_extrapolation_nowcast.html" />
+    <link rel="prev" title="Precipitation downscaling with RainFARM" href="rainfarm_downscale.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Probability forecasts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-example">Numerical example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#real-data-example">Real-data example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Probability forecasts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/probability_forecast.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-probability-forecast-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="probability-forecasts">
+<span id="sphx-glr-example-gallery-probability-forecast-py"></span><h1>Probability forecasts<a class="headerlink" href="#probability-forecasts" title="Permalink to this headline"></a></h1>
+<p>This example script shows how to forecast the probability of exceeding an
+intensity threshold.</p>
+<p>The method is based on the local Lagrangian approach described in Germann and
+Zawadzki (2004).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pysteps.nowcasts.lagrangian_probability</span> <span class="kn">import</span> <span class="n">forecast</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span>
+</pre></div>
+</div>
+<section id="numerical-example">
+<h2>Numerical example<a class="headerlink" href="#numerical-example" title="Permalink to this headline"></a></h2>
+<p>First, we use some dummy data to show the basic principle of this approach.
+The probability forecast is produced by sampling a spatial neighborhood that is
+increased as a function of lead time. As a result, the edges of
+the yellow square becomes more and more smooth as t increases. This represents
+the strong loss of predictability with lead time of any extrapolation nowcast.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># parameters</span>
+<span class="n">precip</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">precip</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">:</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">precip</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="n">timesteps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+<span class="n">thr</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># pixels / timestep</span>
+
+<span class="c1"># compute probability forecast</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">forecast</span><span class="p">(</span><span class="n">precip</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">,</span> <span class="n">thr</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">)</span>
+<span class="c1"># plot</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t=</span><span class="si">{</span><span class="n">timesteps</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_probability_forecast_001.png" srcset="../_images/sphx_glr_probability_forecast_001.png" alt="t=0, t=2, t=6, t=12" class = "sphx-glr-single-img"/></section>
+<section id="real-data-example">
+<h2>Real-data example<a class="headerlink" href="#real-data-example" title="Permalink to this headline"></a></h2>
+<p>We now apply the same method to real data. We use a slope of 1 km / minute
+as suggested by  Germann and Zawadzki (2004), meaning that after 30 minutes,
+the probabilities are computed by using all pixels within a neighborhood of 30
+kilometers.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">pysteps.motion.lucaskanade</span> <span class="kn">import</span> <span class="n">dense_lucaskanade</span>
+<span class="kn">from</span> <span class="nn">pysteps.verification</span> <span class="kn">import</span> <span class="n">reldiag_init</span><span class="p">,</span> <span class="n">reldiag_accum</span><span class="p">,</span> <span class="n">plot_reldiag</span>
+
+<span class="c1"># data source</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">]</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;root_path&quot;</span><span class="p">]</span>
+<span class="n">fmt</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">]</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">]</span>
+<span class="n">ext</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;timestep&quot;</span><span class="p">]</span>
+<span class="n">importer_name</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;importer&quot;</span><span class="p">]</span>
+<span class="n">importer_kwargs</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="s2">&quot;mch&quot;</span><span class="p">][</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+
+<span class="c1"># read precip field</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201607112100&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">ext</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">num_prev_files</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">precip</span><span class="p">,</span> <span class="n">__</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+<span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">precip</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+<span class="c1"># precip[np.isnan(precip)] = 0</span>
+
+<span class="c1"># motion</span>
+<span class="n">motion</span> <span class="o">=</span> <span class="n">dense_lucaskanade</span><span class="p">(</span><span class="n">precip</span><span class="p">)</span>
+
+<span class="c1"># parameters</span>
+<span class="n">nleadtimes</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">thr</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mm / h</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">timestep</span>  <span class="c1"># km / min</span>
+
+<span class="c1"># compute probability forecast</span>
+<span class="n">extrap_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">allow_nonfinite_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fct</span> <span class="o">=</span> <span class="n">forecast</span><span class="p">(</span>
+    <span class="n">precip</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">motion</span><span class="p">,</span> <span class="n">nleadtimes</span><span class="p">,</span> <span class="n">thr</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">,</span> <span class="n">extrap_kwargs</span><span class="o">=</span><span class="n">extrap_kwargs</span>
+<span class="p">)</span>
+
+<span class="c1"># plot</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fct</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_probability_forecast_002.png" srcset="../_images/sphx_glr_probability_forecast_002.png" alt="probability forecast" class = "sphx-glr-single-img"/><p>Let’s plot one single leadtime in more detail using the pysteps visualization
+functionality.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># Plot the field of probabilities</span>
+<span class="n">plot_precip_field</span><span class="p">(</span>
+    <span class="n">fct</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+    <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+    <span class="n">ptype</span><span class="o">=</span><span class="s2">&quot;prob&quot;</span><span class="p">,</span>
+    <span class="n">probthr</span><span class="o">=</span><span class="n">thr</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Exceedence probability (+ </span><span class="si">%i</span><span class="s2"> min)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nleadtimes</span> <span class="o">*</span> <span class="n">timestep</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_probability_forecast_003.png" srcset="../_images/sphx_glr_probability_forecast_003.png" alt="Exceedence probability (+ 30 min)" class = "sphx-glr-single-img"/></section>
+<section id="verification">
+<h2>Verification<a class="headerlink" href="#verification" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># verifying observations</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">importer_name</span><span class="p">,</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">ext</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">num_next_files</span><span class="o">=</span><span class="n">nleadtimes</span>
+<span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">__</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">importer_kwargs</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">obs</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># reliability diagram</span>
+<span class="n">reldiag</span> <span class="o">=</span> <span class="n">reldiag_init</span><span class="p">(</span><span class="n">thr</span><span class="p">)</span>
+<span class="n">reldiag_accum</span><span class="p">(</span><span class="n">reldiag</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">obs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">plot_reldiag</span><span class="p">(</span><span class="n">reldiag</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Reliability diagram&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_probability_forecast_004.png" srcset="../_images/sphx_glr_probability_forecast_004.png" alt="Reliability diagram" class = "sphx-glr-single-img"/></section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
+<p>Germann, U. and I. Zawadzki, 2004:
+Scale Dependence of the Predictability of Precipitation from Continental
+Radar Images. Part II: Probability Forecasts.
+Journal of Applied Meteorology, 43(1), 74-89.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 3</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.518 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-probability-forecast-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/e39ce76a6f15a981a40d71b460d9f819/probability_forecast.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">probability_forecast.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d56b4d8aaa272486e3c74e7994d0bc26/probability_forecast.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">probability_forecast.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rainfarm_downscale.html" class="btn btn-neutral float-left" title="Precipitation downscaling with RainFARM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_extrapolation_nowcast.html" class="btn btn-neutral float-right" title="Extrapolation nowcast" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

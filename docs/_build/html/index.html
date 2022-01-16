@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pySTEPS example gallery &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Optical flow" href="example_gallery/plot_optical_flow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/linda_nowcasts.html">LINDA nowcasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example_gallery/optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>pySTEPS example gallery</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pysteps-example-gallery">
+<span id="example-gallery"></span><span id="sphx-glr-example-gallery"></span><h1>pySTEPS example gallery<a class="headerlink" href="#pysteps-example-gallery" title="Permalink to this headline"></a></h1>
+<p>Below is a collection of example scripts and tutorials to illustrate the usage
+of pysteps.</p>
+<p>These scripts require the pySTEPS example data.
+See the installation instructions in the <span class="xref std std-ref">example_data</span> section.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="This tutorial offers a short overview of the optical flow routines available in  pysteps and it..."><figure class="align-default" id="id1">
+<img alt="Optical flow" src="_images/sphx_glr_plot_optical_flow_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/plot_optical_flow.html#sphx-glr-example-gallery-plot-optical-flow-py"><span class="std std-ref">Optical flow</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This tutorial shows how to use the optical flow routines of pysteps to implement the advection ..."><figure class="align-default" id="id2">
+<img alt="Advection correction" src="_images/sphx_glr_advection_correction_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/advection_correction.html#sphx-glr-example-gallery-advection-correction-py"><span class="std std-ref">Advection correction</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example script shows how to use the stochastic downscaling method RainFARM available in py..."><figure class="align-default" id="id3">
+<img alt="Precipitation downscaling with RainFARM" src="_images/sphx_glr_rainfarm_downscale_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/rainfarm_downscale.html#sphx-glr-example-gallery-rainfarm-downscale-py"><span class="std std-ref">Precipitation downscaling with RainFARM</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example script shows how to forecast the probability of exceeding an intensity threshold."><figure class="align-default" id="id4">
+<img alt="Probability forecasts" src="_images/sphx_glr_probability_forecast_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/probability_forecast.html#sphx-glr-example-gallery-probability-forecast-py"><span class="std std-ref">Probability forecasts</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This tutorial shows how to compute and plot an extrapolation nowcast using  Finnish radar data."><figure class="align-default" id="id5">
+<img alt="Extrapolation nowcast" src="_images/sphx_glr_plot_extrapolation_nowcast_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/plot_extrapolation_nowcast.html#sphx-glr-example-gallery-plot-extrapolation-nowcast-py"><span class="std std-ref">Extrapolation nowcast</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example script shows how to run the stochastic noise field generators included in pysteps."><figure class="align-default" id="id6">
+<img alt="Generation of stochastic noise" src="_images/sphx_glr_plot_noise_generators_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/plot_noise_generators.html#sphx-glr-example-gallery-plot-noise-generators-py"><span class="std std-ref">Generation of stochastic noise</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example shows how to use the thunderstorm DaTing module. The example is based on MeteoSwis..."><figure class="align-default" id="id7">
+<img alt="Thunderstorm Detection and Tracking - T-DaTing" src="_images/sphx_glr_thunderstorm_detection_and_tracking_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/thunderstorm_detection_and_tracking.html#sphx-glr-example-gallery-thunderstorm-detection-and-tracking-py"><span class="std std-ref">Thunderstorm Detection and Tracking - T-DaTing</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="The statistics of intermittent precipitation rates are particularly non-Gaussian and display an..."><figure class="align-default" id="id8">
+<img alt="Data transformations" src="_images/sphx_glr_data_transformations_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/data_transformations.html#sphx-glr-example-gallery-data-transformations-py"><span class="std std-ref">Data transformations</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example script shows how to compute and plot the cascade decompositon of  a single radar p..."><figure class="align-default" id="id9">
+<img alt="Cascade decomposition" src="_images/sphx_glr_plot_cascade_decomposition_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/plot_cascade_decomposition.html#sphx-glr-example-gallery-plot-cascade-decomposition-py"><span class="std std-ref">Cascade decomposition</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This tutorial shows how to compute and plot an ensemble nowcast using Swiss radar data."><figure class="align-default" id="id10">
+<img alt="STEPS nowcast" src="_images/sphx_glr_plot_steps_nowcast_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/plot_steps_nowcast.html#sphx-glr-example-gallery-plot-steps-nowcast-py"><span class="std std-ref">STEPS nowcast</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example shows how to compute and plot a deterministic and ensemble LINDA nowcasts using Sw..."><figure class="align-default" id="id11">
+<img alt="LINDA nowcasts" src="_images/sphx_glr_linda_nowcasts_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/linda_nowcasts.html#sphx-glr-example-gallery-linda-nowcasts-py"><span class="std std-ref">LINDA nowcasts</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="In this tutorial we perform a verification of a probabilistic extrapolation nowcast  using Mete..."><figure class="align-default" id="id12">
+<img alt="Ensemble verification" src="_images/sphx_glr_plot_ensemble_verification_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/plot_ensemble_verification.html#sphx-glr-example-gallery-plot-ensemble-verification-py"><span class="std std-ref">Ensemble verification</span></a></span><a class="headerlink" href="#id12" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Areas of missing data in radar images are typically caused by visibility limits such as beam bl..."><figure class="align-default" id="id13">
+<img alt="Handling of no-data in Lucas-Kanade" src="_images/sphx_glr_LK_buffer_mask_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/LK_buffer_mask.html#sphx-glr-example-gallery-lk-buffer-mask-py"><span class="std std-ref">Handling of no-data in Lucas-Kanade</span></a></span><a class="headerlink" href="#id13" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to use ANVIL and the advantages compared to extrapolation nowcast..."><figure class="align-default" id="id14">
+<img alt="ANVIL nowcast" src="_images/sphx_glr_anvil_nowcast_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/anvil_nowcast.html#sphx-glr-example-gallery-anvil-nowcast-py"><span class="std std-ref">ANVIL nowcast</span></a></span><a class="headerlink" href="#id14" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="In this example we test the convergence of the optical flow methods available in pySTEPS using ..."><figure class="align-default" id="id15">
+<img alt="Optical flow methods convergence" src="_images/sphx_glr_optical_flow_methods_convergence_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="example_gallery/optical_flow_methods_convergence.html#sphx-glr-example-gallery-optical-flow-methods-convergence-py"><span class="std std-ref">Optical flow methods convergence</span></a></span><a class="headerlink" href="#id15" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="_downloads/7f2d9dd791e03c0b571cba7419e34e25/example_gallery_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">example_gallery_python.zip</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="_downloads/231678c52e5b2e2a0f008811cbbc12f2/example_gallery_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">example_gallery_jupyter.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="example_gallery/plot_optical_flow.html" class="btn btn-neutral float-right" title="Optical flow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

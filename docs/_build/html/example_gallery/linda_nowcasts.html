@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LINDA nowcasts &mdash; pysteps_tutorials  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ensemble verification" href="plot_ensemble_verification.html" />
+    <link rel="prev" title="STEPS nowcast" href="plot_steps_nowcast.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pysteps_tutorials
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_optical_flow.html">Optical flow</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advection_correction.html">Advection correction</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rainfarm_downscale.html">Precipitation downscaling with RainFARM</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probability_forecast.html">Probability forecasts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_extrapolation_nowcast.html">Extrapolation nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_noise_generators.html">Generation of stochastic noise</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thunderstorm_detection_and_tracking.html">Thunderstorm Detection and Tracking - T-DaTing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data_transformations.html">Data transformations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_cascade_decomposition.html">Cascade decomposition</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_steps_nowcast.html">STEPS nowcast</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LINDA nowcasts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-input-rain-rate-fields">Read the input rain rate fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#estimate-the-advection-field">Estimate the advection field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deterministic-nowcast">Deterministic nowcast</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#probabilistic-nowcast">Probabilistic nowcast</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plot_ensemble_verification.html">Ensemble verification</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LK_buffer_mask.html">Handling of no-data in Lucas-Kanade</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil_nowcast.html">ANVIL nowcast</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optical_flow_methods_convergence.html">Optical flow methods convergence</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysteps_tutorials</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>LINDA nowcasts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/example_gallery/linda_nowcasts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-example-gallery-linda-nowcasts-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="linda-nowcasts">
+<span id="sphx-glr-example-gallery-linda-nowcasts-py"></span><h1>LINDA nowcasts<a class="headerlink" href="#linda-nowcasts" title="Permalink to this headline"></a></h1>
+<p>This example shows how to compute and plot a deterministic and ensemble LINDA
+nowcasts using Swiss radar data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">pysteps</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">rcparams</span>
+<span class="kn">from</span> <span class="nn">pysteps.motion.lucaskanade</span> <span class="kn">import</span> <span class="n">dense_lucaskanade</span>
+<span class="kn">from</span> <span class="nn">pysteps.nowcasts</span> <span class="kn">import</span> <span class="n">linda</span><span class="p">,</span> <span class="n">sprog</span><span class="p">,</span> <span class="n">steps</span>
+<span class="kn">from</span> <span class="nn">pysteps.utils</span> <span class="kn">import</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">dimension</span><span class="p">,</span> <span class="n">transformation</span>
+<span class="kn">from</span> <span class="nn">pysteps.visualization</span> <span class="kn">import</span> <span class="n">plot_precip_field</span>
+</pre></div>
+</div>
+<section id="read-the-input-rain-rate-fields">
+<h2>Read the input rain rate fields<a class="headerlink" href="#read-the-input-rain-rate-fields" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;201701311200&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">)</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="s2">&quot;mch&quot;</span>
+
+<span class="c1"># Read the data source information from rcparams</span>
+<span class="n">datasource_params</span> <span class="o">=</span> <span class="n">rcparams</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="n">data_source</span><span class="p">]</span>
+
+<span class="c1"># Find the radar files in the archive</span>
+<span class="n">fns</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">find_by_date</span><span class="p">(</span>
+    <span class="n">date</span><span class="p">,</span>
+    <span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;root_path&quot;</span><span class="p">],</span>
+    <span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;path_fmt&quot;</span><span class="p">],</span>
+    <span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;fn_pattern&quot;</span><span class="p">],</span>
+    <span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;fn_ext&quot;</span><span class="p">],</span>
+    <span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">],</span>
+    <span class="n">num_prev_files</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the data from the archive</span>
+<span class="n">importer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">get_method</span><span class="p">(</span><span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;importer&quot;</span><span class="p">],</span> <span class="s2">&quot;importer&quot;</span><span class="p">)</span>
+<span class="n">reflectivity</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_timeseries</span><span class="p">(</span>
+    <span class="n">fns</span><span class="p">,</span> <span class="n">importer</span><span class="p">,</span> <span class="o">**</span><span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;importer_kwargs&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert reflectivity to rain rate</span>
+<span class="n">rainrate</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">to_rainrate</span><span class="p">(</span><span class="n">reflectivity</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<span class="c1"># Upscale data to 2 km to reduce computation time</span>
+<span class="n">rainrate</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">dimension</span><span class="o">.</span><span class="n">aggregate_fields_space</span><span class="p">(</span><span class="n">rainrate</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+
+<span class="c1"># Plot the most recent rain rate field</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plot_precip_field</span><span class="p">(</span><span class="n">rainrate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_linda_nowcasts_001.png" srcset="../_images/sphx_glr_linda_nowcasts_001.png" alt="mm/h" class = "sphx-glr-single-img"/></section>
+<section id="estimate-the-advection-field">
+<h2>Estimate the advection field<a class="headerlink" href="#estimate-the-advection-field" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The advection field is estimated using the Lucas-Kanade optical flow</span>
+<span class="n">advection</span> <span class="o">=</span> <span class="n">dense_lucaskanade</span><span class="p">(</span><span class="n">rainrate</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing the motion field with the Lucas-Kanade method.
+--- 5 outliers detected ---
+--- LK found 176 sparse vectors ---
+--- 63 samples left after declustering ---
+--- total time: 0.40 seconds ---
+</pre></div>
+</div>
+</section>
+<section id="deterministic-nowcast">
+<h2>Deterministic nowcast<a class="headerlink" href="#deterministic-nowcast" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute 30-minute LINDA nowcast with 8 parallel workers</span>
+<span class="c1"># Restrict the number of features to 15 to reduce computation time</span>
+<span class="n">nowcast_linda</span> <span class="o">=</span> <span class="n">linda</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate</span><span class="p">,</span>
+    <span class="n">advection</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">,</span>
+    <span class="n">max_num_features</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">add_perturbations</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">measure_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Compute S-PROG nowcast for comparison</span>
+<span class="n">rainrate_db</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">rainrate</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zerovalue</span><span class="o">=-</span><span class="mf">15.0</span>
+<span class="p">)</span>
+<span class="n">nowcast_sprog</span> <span class="o">=</span> <span class="n">sprog</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate_db</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:],</span>
+    <span class="n">advection</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">,</span>
+    <span class="n">n_cascade_levels</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">R_thr</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert reflectivity nowcast to rain rate</span>
+<span class="n">nowcast_sprog</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">nowcast_sprog</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Plot the nowcasts</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span>
+    <span class="n">nowcast_linda</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;LINDA (+ 30 min)&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plot_precip_field</span><span class="p">(</span>
+    <span class="n">nowcast_sprog</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;S-PROG (+ 30 min)&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_linda_nowcasts_002.png" srcset="../_images/sphx_glr_linda_nowcasts_002.png" alt="LINDA (+ 30 min), mm/h, S-PROG (+ 30 min), mm/h" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing LINDA nowcast
+-----------------------
+
+Inputs
+------
+dimensions:           320x355
+number of time steps: 3
+
+Methods
+-------
+nowcast type:         deterministic
+feature detector:     blob
+extrapolator:         semilagrangian
+kernel type:          anisotropic
+
+Parameters
+----------
+number of time steps:       6
+ARI model order:            1
+localization window radius: 64.0
+
+Detecting features... found 15 blobs in 0.81 seconds.
+Transforming to Lagrangian coordinates... 0.08 seconds.
+Estimating the first convolution kernel... 8.74 seconds.
+Estimating the ARI(p,1) parameters... 0.15 seconds.
+Estimating the second convolution kernel... 8.13 seconds.
+Computing nowcast for time step 1... 0.36 seconds.
+Computing nowcast for time step 2... 0.37 seconds.
+Computing nowcast for time step 3... 0.37 seconds.
+Computing nowcast for time step 4... 0.37 seconds.
+Computing nowcast for time step 5... 0.37 seconds.
+Computing nowcast for time step 6... 0.37 seconds.
+Computing S-PROG nowcast:
+-------------------------
+
+Inputs:
+-------
+input dimensions: 320x355
+
+Methods:
+--------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+conditional statistics: no
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters:
+-----------
+number of time steps:     6
+parallel threads:         1
+number of cascade levels: 6
+order of the AR(p) model: 2
+precip. intensity threshold: -10
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.999163      | 0.996708      |
+-----------------------------------------
+| 2     | 0.997665      | 0.989434      |
+-----------------------------------------
+| 3     | 0.990083      | 0.965014      |
+-----------------------------------------
+| 4     | 0.944684      | 0.846046      |
+-----------------------------------------
+| 5     | 0.745174      | 0.544617      |
+-----------------------------------------
+| 6     | 0.265468      | 0.124791      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.919792     | -0.921400    | 0.015897     |
+------------------------------------------------------
+| 2     | 1.867768     | -0.872140    | 0.033414     |
+------------------------------------------------------
+| 3     | 1.736251     | -0.753642    | 0.092338     |
+------------------------------------------------------
+| 4     | 1.352003     | -0.431169    | 0.295928     |
+------------------------------------------------------
+| 5     | 0.763049     | -0.023987    | 0.666678     |
+------------------------------------------------------
+| 6     | 0.249956     | 0.058435     | 0.962472     |
+------------------------------------------------------
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+Computing nowcast for time step 4... done.
+Computing nowcast for time step 5... done.
+Computing nowcast for time step 6... done.
+</pre></div>
+</div>
+<p>The above figure shows that the filtering scheme implemented in LINDA preserves
+small-scale and band-shaped features better than S-PROG. This is because the
+former uses a localized elliptical convolution kernel instead of the
+cascade-based autoregressive process, where the parameters are estimated over
+the whole domain.</p>
+</section>
+<section id="probabilistic-nowcast">
+<h2>Probabilistic nowcast<a class="headerlink" href="#probabilistic-nowcast" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute 30-minute LINDA nowcast ensemble with 40 members and 8 parallel workers</span>
+<span class="n">nowcast_linda</span> <span class="o">=</span> <span class="n">linda</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate</span><span class="p">,</span>
+    <span class="n">advection</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">,</span>
+    <span class="n">max_num_features</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">add_perturbations</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">num_ens_members</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">measure_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Compute 40-member STEPS nowcast for comparison</span>
+<span class="n">nowcast_steps</span> <span class="o">=</span> <span class="n">steps</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span>
+    <span class="n">rainrate_db</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:],</span>
+    <span class="n">advection</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">,</span>
+    <span class="mi">40</span><span class="p">,</span>
+    <span class="n">n_cascade_levels</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">R_thr</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">mask_method</span><span class="o">=</span><span class="s2">&quot;incremental&quot;</span><span class="p">,</span>
+    <span class="n">kmperpixel</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">timestep</span><span class="o">=</span><span class="n">datasource_params</span><span class="p">[</span><span class="s2">&quot;timestep&quot;</span><span class="p">],</span>
+    <span class="n">vel_pert_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert reflectivity nowcast to rain rate</span>
+<span class="n">nowcast_steps</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="n">dB_transform</span><span class="p">(</span>
+    <span class="n">nowcast_steps</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Plot two ensemble members of both nowcasts</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_precip_field</span><span class="p">(</span>
+        <span class="n">nowcast_linda</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;off&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LINDA Member </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_precip_field</span><span class="p">(</span>
+        <span class="n">nowcast_steps</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">geodata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;off&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STEPS Member </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_linda_nowcasts_003.png" srcset="../_images/sphx_glr_linda_nowcasts_003.png" alt="LINDA Member 1, LINDA Member 2, STEPS Member 1, STEPS Member 2" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing LINDA nowcast
+-----------------------
+
+Inputs
+------
+dimensions:           320x355
+number of time steps: 3
+
+Methods
+-------
+nowcast type:         ensemble
+feature detector:     blob
+extrapolator:         semilagrangian
+kernel type:          anisotropic
+
+Parameters
+----------
+number of time steps:       6
+ARI model order:            1
+localization window radius: 64.0
+error dist. window radius:  48.0
+error ACF window radius:    80.0
+ensemble size:              40
+parallel workers:           8
+seed:                       None
+
+Detecting features... found 15 blobs in 0.81 seconds.
+Transforming to Lagrangian coordinates... 0.07 seconds.
+Estimating the first convolution kernel... 8.92 seconds.
+Estimating the ARI(p,1) parameters... 0.14 seconds.
+Estimating the second convolution kernel... 8.09 seconds.
+Estimating forecast errors... 0.56 seconds.
+Estimating perturbation parameters... 35.10 seconds.
+Computing STEPS nowcast:
+------------------------
+
+Inputs:
+-------
+input dimensions: 320x355
+km/pixel:         2
+time step:        5 minutes
+
+Methods:
+--------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+noise generator:        nonparametric
+noise adjustment:       no
+velocity perturbator:   None
+conditional statistics: no
+precip. mask method:    incremental
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters:
+-----------
+number of time steps:     6
+ensemble size:            40
+parallel threads:         1
+number of cascade levels: 6
+order of the AR(p) model: 2
+precip. intensity threshold: -10
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.999163      | 0.996708      |
+-----------------------------------------
+| 2     | 0.997665      | 0.989434      |
+-----------------------------------------
+| 3     | 0.990083      | 0.965014      |
+-----------------------------------------
+| 4     | 0.944684      | 0.846046      |
+-----------------------------------------
+| 5     | 0.745174      | 0.544617      |
+-----------------------------------------
+| 6     | 0.265468      | 0.124791      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.919792     | -0.921400    | 0.015897     |
+------------------------------------------------------
+| 2     | 1.867768     | -0.872140    | 0.033414     |
+------------------------------------------------------
+| 3     | 1.736251     | -0.753642    | 0.092338     |
+------------------------------------------------------
+| 4     | 1.352003     | -0.431169    | 0.295928     |
+------------------------------------------------------
+| 5     | 0.763049     | -0.023987    | 0.666678     |
+------------------------------------------------------
+| 6     | 0.249956     | 0.058435     | 0.962472     |
+------------------------------------------------------
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+Computing nowcast for time step 4... done.
+Computing nowcast for time step 5... done.
+Computing nowcast for time step 6... done.
+</pre></div>
+</div>
+<p>The above figure shows the main difference between LINDA and STEPS. In
+addition to the convolution kernel, another improvement in LINDA is a
+localized perturbation generator using the short-space Fourier transform
+(SSFT) and a spatially variable marginal distribution. As a result, the
+LINDA ensemble members preserve the anisotropic and small-scale structures
+considerably better than STEPS.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_linda_nowcasts_004.png" srcset="../_images/sphx_glr_linda_nowcasts_004.png" alt="linda nowcasts" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 3 minutes  26.521 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-example-gallery-linda-nowcasts-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/72cd9a66a0ec0e9e5443588d3b865bb8/linda_nowcasts.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">linda_nowcasts.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/46dabc0fa0fe3cb4a606f2327a9143ca/linda_nowcasts.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">linda_nowcasts.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plot_steps_nowcast.html" class="btn btn-neutral float-left" title="STEPS nowcast" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_ensemble_verification.html" class="btn btn-neutral float-right" title="Ensemble verification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pysteps developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
