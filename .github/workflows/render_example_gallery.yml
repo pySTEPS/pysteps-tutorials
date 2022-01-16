@@ -171,6 +171,7 @@ jobs:
           git reset
           git add -A docs
           git add -A -f docs/example_gallery
+          git add -A -f docs/_build
           git add -A examples LICENSE README.md
           git commit -m "Generating gallery for $GITHUB_SHA"
 
