@@ -39,7 +39,7 @@ jobs:
           
           echo "::set-output name=has_trigger_flag::${has_trigger_flag}" 
 
-  render_examples_gallery:
+  render_example_gallery:
     name: Render the example gallery
     runs-on: "ubuntu-latest"
 
@@ -90,7 +90,7 @@ jobs:
           echo "::set-output name=pysteps_branch::${pysteps_branch}" 
           echo "::set-output name=rtd_branch::${rtd_branch}" 
 
-      #  render_examples_gallery:
+      #  render_example_gallery:
       - name: Checkout pysteps repository at the branch that triggered the event
         uses: actions/checkout@v2
         with:
@@ -153,12 +153,12 @@ jobs:
           python ci/fetch_pysteps_data.py $HOME/pysteps_data
           python -c "import pysteps; print(pysteps.config_fname())"  
 
-      - name: Build examples gallery
+      - name: Build example gallery
         working-directory: ./docs
         run: |
           make html 
 
-      - name: Commit the generated examples gallery
+      - name: Commit the generated example gallery
         env:
           RENDER_BRANCH: ${{steps.set_render_branch.outputs.render_branch}}
         run: |
@@ -166,11 +166,11 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
           # Checkout changes in an orphan branch first.
-          # We want to update only the examples_gallery directory
+          # We want to update only the example_gallery directory
           git checkout --orphan tmp
           git reset
           git add -A docs
-          git add -A -f docs/examples_gallery
+          git add -A -f docs/example_gallery
           git add -A examples LICENSE README.md
           git commit -m "Generating gallery for $GITHUB_SHA"
 

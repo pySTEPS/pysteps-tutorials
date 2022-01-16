@@ -1,5 +1,5 @@
 
-.. include:: examples_gallery/index.rst
+.. include:: example_gallery/index.rst
 
 
 Indices and tables
