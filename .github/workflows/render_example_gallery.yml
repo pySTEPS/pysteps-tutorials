@@ -76,15 +76,15 @@ jobs:
           #
           #  [TRIGGER] Trigger rendering from c0268d3
           #
-          #  [EVENT_BRANCH]:decouple_triggering
+          #  [GALLERY_BRANCH]:decouple_triggering
           #  [PYSTEPS_BRANCH]: decouple_triggering
           #  [RTD_BRANCH]: decouple_triggering
           
-          event_branch=$(parse_keyword "EVENT_BRANCH") || exit 2           
+          event_branch=$(parse_keyword "GALLERY_BRANCH") || exit 2           
           pysteps_branch=$(parse_keyword "PYSTEPS_BRANCH") || exit 3
           
           rtd_branch=$(parse_keyword "RTD_BRANCH")
-          [[ $? -eq 1 ]] && exit 4
+          [[ $? -eq 1 ]] && exit 4  # empty variable is allowed 
           
           echo "::set-output name=event_branch::${event_branch}" 
           echo "::set-output name=pysteps_branch::${pysteps_branch}" 
@@ -102,9 +102,9 @@ jobs:
         id: set_render_branch
         working-directory: ${{ env.PYSTEPS_MAIN_REPO }}
         env:
-          EVENT_BRANCH: ${{steps.parse_commit_msg.outputs.event_branch}}
+          GALLERY_BRANCH: ${{steps.parse_commit_msg.outputs.event_branch}}
         run: |
-          render_branch="${EVENT_BRANCH}_rendered"
+          render_branch="${GALLERY_BRANCH}_rendered"
           
           # Check if the Linked repository current commit corresponds to a tag
           if [[ "${event_branch}" == "main" ]]; then
@@ -119,11 +119,11 @@ jobs:
       - name: Print debug information
         env:
           RENDER_BRANCH: ${{steps.set_render_branch.outputs.render_branch}}
-          EVENT_BRANCH: ${{steps.parse_commit_msg.outputs.event_branch}}
+          GALLERY_BRANCH: ${{steps.parse_commit_msg.outputs.event_branch}}
           PYSTEPS_BRANCH: ${{steps.parse_commit_msg.outputs.pysteps_branch}}
           RTD_BRANCH: ${{steps.parse_commit_msg.outputs.rtd_branch}}
         run: |
-          echo "EVENT_BRANCH=${EVENT_BRANCH}"          
+          echo "GALLERY_BRANCH=${GALLERY_BRANCH}"          
           echo "GITHUB_SHA=${GITHUB_SHA}"
           echo "RENDER_BRANCH=${RENDER_BRANCH}"
           echo "PYSTEPS_BRANCH=${PYSTEPS_BRANCH}"
@@ -207,13 +207,12 @@ jobs:
 #      run:
 #        shell: bash -l {0}
 #    env:
-#      RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+#      RTD_TOKEN: ${{ secrets.PYSTEPS_BOT_RTD_TOKEN }}
 #      RTD_URL: ${{ secrets.RTD_URL }}
-#      RTD_BRANCH: ${{ needs.run_notebooks.outputs.rtd_branch }}
+#      RTD_BRANCH: ${{steps.parse_commit_msg.outputs.rtd_branch}}
 #    steps:
 #      - name: Trigger readthedocs for the corresponding branch (latest or tag)
 #        run: |
-#          # Ignore triggering if this workflow was triggered by the dev branch.
-#          if [[ "${RTD_BRANCH}" != "test" ]]; then
+#          if [[ ! -z "${RTD_BRANCH}" ]]; then
 #            curl -X POST -d "branches=${RTD_BRANCH}" -d "token=${RTD_TOKEN}" "${RTD_URL}"
 #          fi
